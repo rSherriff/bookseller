@@ -93,6 +93,9 @@ class Section:
         for entity in self.entities:
             entity.late_update()
 
+    def close(self):
+        pass
+
     def mousedown(self,button,x,y):
         pass
 
