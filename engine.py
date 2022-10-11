@@ -173,6 +173,9 @@ class Engine(abc.ABC):
         if section not in self.disabled_ui_sections:
             self.disabled_ui_sections.append(section)
 
+    def is_section_disabled(self, section):
+        return section in self.disabled_sections
+
     def queue_music(self, stage):
         music = self.stage_music[stage]["music"]
         volume = self.stage_music[stage]["music_volume"]
