@@ -3,7 +3,8 @@ from mimetypes import init
 
 class LocationType(Enum):
     CLIENT = 0,
-    SHOP = 1
+    SHOP = 1,
+    HOME = 2
 
 class Location:
     def __init__(self, name, type) -> None:
@@ -15,4 +16,5 @@ class LocationManager():
         self.locations = {
             "client": Location("Client", LocationType.CLIENT),
             "bloomsbury": Location("skoob", LocationType.SHOP),
+            "home": Location("Home", LocationType.HOME),
         }
