@@ -1,6 +1,6 @@
 from enum import Enum
 from mimetypes import init
-from books import books
+from books import *
 
 
 
@@ -20,12 +20,20 @@ class Shop:
         else:
             print("Failed to remove {0} - {1} from {2}'s stock".format(book.id, book.title, self.name))
 
-class ShopManager():
-    def __init__(self) -> None:
+    def get_book_ids(self):
+        ids = []
+        for key in self.stock.keys():
+            ids.append(key)
+        return ids
 
-        skoob = Shop("Skoob")
-        skoob.add_book(books["1"])
+skoob = Shop("Skoob")
+skoob.add_book(book_manager["1"])
+skoob.add_book(book_manager["2"])
+skoob.add_book(book_manager["3"])
+skoob.add_book(book_manager["4"])
+skoob.add_book(book_manager["5"])
+skoob.add_book(book_manager["6"])
 
-        self.shops = {
-            "skoob": skoob
-        }
+shop_manager = {
+    "skoob": skoob
+}

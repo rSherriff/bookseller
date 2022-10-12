@@ -11,9 +11,7 @@ class Location:
         self.name = name
         self.type = type
 
-class LocationManager():
-    def __init__(self) -> None:
-        self.locations = {
+location_manager = {
             "client": Location("Client", LocationType.CLIENT),
             "bloomsbury": Location("skoob", LocationType.SHOP),
             "home": Location("Home", LocationType.HOME),

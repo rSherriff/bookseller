@@ -10,6 +10,11 @@ class Book:
         self.desc = desc
 
 
-books = {
-        "1": Book("1","testBook", "Here is a test book, it eventually will have of descriptive information!"),
+book_manager = {
+        "1": Book("1","testBook", "Here is a test book, it eventually will have lots of descriptive information!"),
+        "2": Book("2","testBook", "Here is a test book, it eventually will have lots of descriptive information!"),
+        "3": Book("3","testBook", "Here is a test book, it eventually will have lots of descriptive information!"),
+        "4": Book("4","testBook", "Here is a test book, it eventually will have lots of descriptive information!"),
+        "5": Book("5","testBook", "Here is a test book, it eventually will have lots of descriptive information!"),
+        "6": Book("6","testBook", "Here is a test book, it eventually will have lots of descriptive information!"),
     }

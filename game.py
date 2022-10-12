@@ -4,22 +4,21 @@ from enum import Enum, auto
 from threading import Timer
 from unicodedata import name
 
-from locations import *
-from books import *
-from shops import *
-
 from pygame import mixer
 
+from books import *
 from engine import Engine, GameState
+from locations import *
 from sections.client_section import ClientSection
 from sections.confirmation import Confirmation
+from sections.home_section import HomeSection
 from sections.info_section import InfoSection
 from sections.intro_section import IntroSection
 from sections.map_section import MapSection
 from sections.nav_section import NavSection
 from sections.notification import Notification
 from sections.shop_section import ShopSection
-from sections.home_section import HomeSection
+from shops import *
 
 
 class MainSectionState(Enum):
@@ -38,9 +37,6 @@ class Game(Engine):
         super().__init__(teminal_width, terminal_height)
 
         self.player = PlayerState()
-
-        self.location_manager = LocationManager()
-        self.shop_manager = ShopManager()
 
         self.main_section_state = MainSectionState.NONE
 
@@ -94,7 +90,7 @@ class Game(Engine):
             return
 
         print(("Changing to location {0}").format(location))
-        location = self.location_manager.locations[location]
+        location = location_manager[location]
 
         self.close_all_main_sections()
 

@@ -1,13 +1,26 @@
 from sections.section import Section
+from shops import *
+from ui.shop_ui import ShopUI
+
+
+shop_screen_info = {
+    "books":{
+        "x":6,
+        "y":7,
+        "gap": 2
+    }
+}
 
 class ShopSection(Section):
     def __init__(self, engine, x: int, y: int, width: int, height: int):
         super().__init__(engine, x, y, width, height, "shop_section.xp")
 
         self.shop = None
+        self.ui = ShopUI(self,x,y,self.tiles["graphic"])
 
     def setup(self, shop_location):
-        self.shop = self.engine.shop_manager.shops[shop_location.name]      
+        self.shop = shop_manager[shop_location.name]      
+        self.ui.setup_book_tooltips(shop_screen_info["books"]["x"],shop_screen_info["books"]["y"],shop_screen_info["books"]["gap"],self.shop.get_book_ids())
 
     def update(self):
         super().update()
@@ -20,8 +33,10 @@ class ShopSection(Section):
         console.print(4,6,"Stock:")
         count = 0
         for book in self.shop.stock.values():
-            console.print(6, 7 + count,"{0}: {1}".format(count+1, book.title))
+            console.print(shop_screen_info["books"]["x"],shop_screen_info["books"]["y"]+ (count * shop_screen_info["books"]["gap"]),"{0}: {1}".format(count+1, book.title))
             count += 1
+
+        self.ui.render(console)
       
     def mousedown(self,button,x,y):
         pass

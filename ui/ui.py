@@ -1,4 +1,5 @@
 from __future__ import annotations
+from math import ceil
 
 from threading import Timer
 from typing import TYPE_CHECKING
@@ -21,6 +22,8 @@ class UI:
         self.y = y
         self.section = section
         self.enabled = True
+
+        self.showing_tooltip = False
 
     def render(self, console: Console):
         for element in self.elements:
@@ -57,12 +60,22 @@ class UI:
             
         for element in self.elements:
             if element.is_mouseover(x, y):
-                if element.mouseover == False:
-                    element.on_mouseenter()
-                element.mouseover = True
+                if not isinstance(element, Tooltip):
+                    if element.mouseover == False:
+                        element.on_mouseenter()
+                    element.mouseover = True
+
+                elif isinstance(element, Tooltip) and not self.showing_tooltip:
+                    self.showing_tooltip = True
+                    if element.mouseover == False:
+                        element.on_mouseenter()
+                    element.mouseover = True
+
             else:
                 if element.mouseover == True:
                     element.on_mouseleave()
+                    if isinstance(element, Tooltip):
+                        self.showing_tooltip = False
                 element.mouseover = False
 
             element.mousemove(x,y)
@@ -297,55 +310,42 @@ class HoverTrigger(UIElement):
         pass
 
 class Tooltip(UIElement):
-    def __init__(self, x: int, y: int, width: int, height:int, x_offset: int, y_offset: int, text: str):
-        super().__init__(x,y,width,height)
+    def __init__(self, x: int, y: int, width: int, height:int, text: str):
+        super().__init__(x,y,width, height)
+
+        self.text = text
+        self.width = width
+        self.height = height
 
         self.visible = False
         self.visibleTimer = 5
 
-        self.render_width = 0
-        self.render_height = 1
-        self.x_offset = x_offset
-        self.y_offset = y_offset
-
-        self.lines = list()
-        self.lines = text.split('\n')
-        self.render_height = len(self.lines) + 2
-        for l in self.lines:
-            self.render_width = max(self.render_width, len(l) + 2)
+        self.render_width = min(len(self.text), 25)
+        self.render_height = ceil(len(self.text) / self.render_width)
+        self.render_width += 2
+        self.render_height += 2
 
         self.render_order = 5
 
     def on_mouseenter(self):
-        pass
+        self.visible = True
         
     def on_mouseleave(self):
-        self.visibleTimer = 5
         self.visible = False
         
-
     def on_mousedown(self, x: int, y: int):
         pass
 
-    def render(self, console: Console):
-        if self.mouseover:
-            self.visibleTimer -= 0.17
-        if self.visibleTimer < 0:
-            self.visible = True
-
+    def is_mouseover(self, x,y):
         if self.visible == True:
-            temp_console = Console(width=self.render_width, height=self.render_height, order="F")
+            return self.x<= x <= self.x + self.render_width - 1 and self.y <= y <= self.y + self.render_height - 1
+        else:
+            return super().is_mouseover(x,y)
 
-            for h in range(0,self.render_height):
-                for w in range(0, self.render_width):
-                    temp_console.tiles_rgb[w,h][2] = (255,255,255) 
-
-            count = 1
-            for l in self.lines:
-                temp_console.print(1, count, l, (0,0,0))
-                count += 1
-
-            temp_console.blit(console, self.x + self.x_offset, self.y+self.y_offset)
+    def render(self, console: Console):
+        if self.visible == True:
+            console.draw_frame(x=self.x,y=self.y,width=self.render_width,height=self.render_height, decoration="╔═╗║ ║╚═╝", bg=(0,0,0))
+            console.print_box(x=self.x+1,y=self.y+1,width=self.render_width-2,height=self.render_height-2,string=self.text,alignment=tcod.CENTER, bg=(0,0,0))
 
 class Toggle(Button):
     def __init__(self, x: int, y: int, width: int, height: int, is_on: bool, on_action: Action, off_action: Action, tiles, on_tiles, off_tiles, response_x:int, response_y:int, normal_bg = (255,255,255), highlight_bg = (128,128,128)):
