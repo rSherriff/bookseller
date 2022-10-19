@@ -26,10 +26,10 @@ class ShopSection(Section):
 
     def refresh(self):
         self.ui.clear()
-        self.ui.setup_book_tooltips(shop_screen_info["books"]["x"],shop_screen_info["books"]["y"],shop_screen_info["books"]["gap"],self.shop.get_book_ids())
+        self.ui.setup_book_tooltips(shop_screen_info["books"]["x"],shop_screen_info["books"]["y"],shop_screen_info["books"]["gap"],self.shop.stock.get_book_ids())
         
         button_x = shop_screen_info["books"]["x"] + shop_screen_info["books"]["button_delta"]
-        self.ui.setup_book_buttons(button_x,shop_screen_info["books"]["y"],shop_screen_info["books"]["gap"],self.shop.name,self.shop.get_book_ids())
+        self.ui.setup_book_buttons(button_x,shop_screen_info["books"]["y"],shop_screen_info["books"]["gap"],self.shop.name,self.shop.stock.get_book_ids())
 
     def update(self):
         super().update()
@@ -42,7 +42,7 @@ class ShopSection(Section):
         console.print(4,6,"Stock:")
         count = 0
         for book in self.shop.stock.values():
-            console.print(shop_screen_info["books"]["x"],shop_screen_info["books"]["y"]+ (count * shop_screen_info["books"]["gap"]),"{0}: {1}".format(count+1, book.title))
+            console.print(shop_screen_info["books"]["x"],shop_screen_info["books"]["y"]+ (count * shop_screen_info["books"]["gap"]),"{0}: {1}".format(book.id, book.title))
 
             button_x = shop_screen_info["books"]["x"] + shop_screen_info["books"]["button_delta"]
             console.print(button_x,shop_screen_info["books"]["y"]+ (count * shop_screen_info["books"]["gap"]),"Buy")

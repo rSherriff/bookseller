@@ -7,6 +7,7 @@ from unicodedata import name
 from pygame import mixer
 
 from books import *
+from books import Stock
 from engine import Engine, GameState
 from locations import *
 from sections.client_section import ClientSection
@@ -31,27 +32,7 @@ class PlayerState:
         self.name = "Player"
         self.day = 0
         self.location = "home"
-        self.stock = {}
-
-    def add_book(self, book):
-        self.stock[book.id] = book
-        print("Added {0} - {1} to {2}'s stock".format(book.id, book.title, self.name))
-
-    def remove_book(self, book):
-        remove_key = self.stock.pop(book.id, None)
-
-        if remove_key != None:
-            print("Removed {0} - {1} from {2}'s stock".format(book.id, book.title, self.name))
-            return True
-        else:
-            print("Failed to remove {0} - {1} from {2}'s stock".format(book.id, book.title, self.name))
-            return False
-
-    def get_book_ids(self):
-        ids = []
-        for key in self.stock.keys():
-            ids.append(key)
-        return ids
+        self.stock = Stock("PInv")
 
 
 class Game(Engine):
@@ -147,8 +128,8 @@ class Game(Engine):
         self.main_section_state = new_state
 
     def purchase_book(self, shop_name, book):
-        if shop_manager[shop_name].remove_book(book):
-            self.player.add_book(book)
+        if shop_manager[shop_name].stock.remove_book(book):
+            self.player.stock.add_book(book)
             for _, section in self.get_active_sections():
                 section.refresh()
         
