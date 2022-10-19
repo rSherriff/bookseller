@@ -62,13 +62,13 @@ class UI:
             if element.is_mouseover(x, y):
                 if not isinstance(element, Tooltip):
                     if element.mouseover == False:
-                        element.on_mouseenter()
+                        element.on_mouseenter(x,y)
                     element.mouseover = True
 
                 elif isinstance(element, Tooltip) and not self.showing_tooltip:
                     self.showing_tooltip = True
                     if element.mouseover == False:
-                        element.on_mouseenter()
+                        element.on_mouseenter(x,y)
                     element.mouseover = True
 
             else:
@@ -108,7 +108,7 @@ class UIElement:
     def on_keydown(self, event: tcod.event.KeyDown):
         pass
 
-    def on_mouseenter(self):
+    def on_mouseenter(self, x: int = 0, y:int = 0):
         pass
 
     def on_mouseleave(self):
@@ -161,7 +161,7 @@ class Button(UIElement):
         if self.click_action is not None:
             self.click_action.perform()
 
-    def on_mouseenter(self):
+    def on_mouseenter(self, x: int = 0, y:int = 0):
         if self.hover_action is not None:
             self.hover_action.perform()
 
@@ -300,7 +300,7 @@ class HoverTrigger(UIElement):
         self.mouse_enter_action = mouse_enter_action
         self.mouse_leave_action = mouse_leave_action
 
-    def on_mouseenter(self):
+    def on_mouseenter(self, x: int = 0, y:int = 0):
         self.mouse_enter_action.perform()
         
     def on_mouseleave(self):
@@ -320,6 +320,8 @@ class Tooltip(UIElement):
         self.visible = False
         self.visibleTimer = 5
 
+        self.render_x = self.x
+        self.render_y = self.y
         self.render_width = min(len(self.text), 25)
         self.render_height = ceil(len(self.text) / self.render_width)
         self.render_width += 2
@@ -327,8 +329,10 @@ class Tooltip(UIElement):
 
         self.render_order = 5
 
-    def on_mouseenter(self):
+    def on_mouseenter(self, x: int = 0, y:int = 0):
         self.visible = True
+        self.render_x = x
+        self.render_y = y
         
     def on_mouseleave(self):
         self.visible = False
@@ -338,14 +342,16 @@ class Tooltip(UIElement):
 
     def is_mouseover(self, x,y):
         if self.visible == True:
-            return self.x<= x <= self.x + self.render_width - 1 and self.y <= y <= self.y + self.render_height - 1
+            is_mouseover_trigger = self.x<= x <= self.x + self.render_width - 1 and self.y <= y <= self.y + self.render_height - 1
+            is_mouseover_render = self.render_x<= x <= self.render_x + self.render_width - 1 and self.render_y <= y <= self.render_y + self.render_height - 1
+            return is_mouseover_trigger or is_mouseover_render
         else:
             return super().is_mouseover(x,y)
 
     def render(self, console: Console):
         if self.visible == True:
-            console.draw_frame(x=self.x,y=self.y,width=self.render_width,height=self.render_height, decoration="╔═╗║ ║╚═╝", bg=(0,0,0))
-            console.print_box(x=self.x+1,y=self.y+1,width=self.render_width-2,height=self.render_height-2,string=self.text,alignment=tcod.CENTER, bg=(0,0,0))
+            console.draw_frame(x=self.render_x,y=self.render_y,width=self.render_width,height=self.render_height, decoration="╔═╗║ ║╚═╝", bg=(0,0,0))
+            console.print_box(x=self.render_x+1,y=self.render_y+1,width=self.render_width-2,height=self.render_height-2,string=self.text,alignment=tcod.CENTER, bg=(0,0,0))
 
 class Toggle(Button):
     def __init__(self, x: int, y: int, width: int, height: int, is_on: bool, on_action: Action, off_action: Action, tiles, on_tiles, off_tiles, response_x:int, response_y:int, normal_bg = (255,255,255), highlight_bg = (128,128,128)):
