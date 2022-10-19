@@ -92,6 +92,9 @@ class UI:
         self.elements.sort(key = lambda element: element.render_order)
         self.elements.sort(key = lambda element: element.mouseover)
 
+    def clear(self):
+        self.elements.clear()
+
 class UIElement:
     def __init__(self, x, y, width, height):
         self.x = x

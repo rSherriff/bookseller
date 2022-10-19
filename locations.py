@@ -13,6 +13,6 @@ class Location:
 
 location_manager = {
             "client": Location("Client", LocationType.CLIENT),
-            "bloomsbury": Location("skoob", LocationType.SHOP),
+            "bloomsbury": Location("Skoob", LocationType.SHOP),
             "home": Location("Home", LocationType.HOME),
         }

@@ -28,8 +28,30 @@ class MainSectionState(Enum):
 
 class PlayerState:
     def __init__(self) -> None:
+        self.name = "Player"
         self.day = 0
         self.location = "home"
+        self.stock = {}
+
+    def add_book(self, book):
+        self.stock[book.id] = book
+        print("Added {0} - {1} to {2}'s stock".format(book.id, book.title, self.name))
+
+    def remove_book(self, book):
+        remove_key = self.stock.pop(book.id, None)
+
+        if remove_key != None:
+            print("Removed {0} - {1} from {2}'s stock".format(book.id, book.title, self.name))
+            return True
+        else:
+            print("Failed to remove {0} - {1} from {2}'s stock".format(book.id, book.title, self.name))
+            return False
+
+    def get_book_ids(self):
+        ids = []
+        for key in self.stock.keys():
+            ids.append(key)
+        return ids
 
 
 class Game(Engine):
@@ -123,4 +145,10 @@ class Game(Engine):
 
     def change_main_section_state(self, new_state):
         self.main_section_state = new_state
+
+    def purchase_book(self, shop_name, book):
+        if shop_manager[shop_name].remove_book(book):
+            self.player.add_book(book)
+            for _, section in self.get_active_sections():
+                section.refresh()
         

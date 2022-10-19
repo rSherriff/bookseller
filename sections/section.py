@@ -93,6 +93,9 @@ class Section:
         for entity in self.entities:
             entity.late_update()
 
+    def refresh(self):
+        pass
+
     def close(self):
         pass
 
