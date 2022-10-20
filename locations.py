@@ -17,7 +17,7 @@ class SubLocation:
         self.type = type
 
 location_manager = {
-            "client": Location("Client", {"client":SubLocation("Client", LocationType.CLIENT)}),
-            "bloomsbury": Location("Bloomsbury", {"skoob":SubLocation("Skoob", LocationType.SHOP)}),
-            "home": Location("Home", {"home":SubLocation("Home", LocationType.HOME)})
+            "Client": Location("Client", {"Client":SubLocation("Client", LocationType.CLIENT)}),
+            "Bloomsbury": Location("Bloomsbury", {"skoob":SubLocation("Skoob", LocationType.SHOP)}),
+            "Home": Location("Home", {"Home":SubLocation("Home", LocationType.HOME)})
         }

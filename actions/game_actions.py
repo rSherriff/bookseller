@@ -32,3 +32,20 @@ class PurchaseBook(Action):
 
     def perform(self):
         self.engine.purchase_book(self.shop_name, self.book)
+
+class OpenChangePlayerLocationConfirmationAction(Action):
+    def __init__(self, engine, text, location, confirmation_action,section, enable_ui_on_confirm) -> None:
+        super().__init__(engine)
+        self.text = text
+        self.location = location
+        self.section = section
+        self.enable_ui_on_confirm = enable_ui_on_confirm
+        self.confirmation_action = confirmation_action
+
+    def perform(self) -> None:
+        if not self.engine.player.location == self.location:
+            return self.engine.open_confirmation_dialog(self.text, self.confirmation_action, self.section, self.enable_ui_on_confirm)
+        else:
+            return self.engine.open_notification_dialog("You are already at this location!", self.section)
+
+

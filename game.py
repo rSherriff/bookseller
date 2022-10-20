@@ -33,8 +33,8 @@ class PlayerState:
     def __init__(self) -> None:
         self.name = "Player"
         self.day = 0
-        self.location = "home"
-        self.sublocation = "home"
+        self.location = "Home"
+        self.sublocation = "Home"
         self.stock = Stock("PInv")
 
 
@@ -89,6 +89,7 @@ class Game(Engine):
         self.close_all_main_sections()
         self.enable_section("mapSection")
         self.change_main_section_state(MainSectionState.MAP)
+        self.game_sections["mapSection"].open()
 
     def display_current_location(self):
         self.display_location(self.player.location)
@@ -97,10 +98,12 @@ class Game(Engine):
         self.display_sublocation(self.player.location, self.player.sublocation)
 
     def display_location(self, location):
+        self.player.sublocation = "none"
         self.close_all_main_sections()
         self.enable_section("locationSection")
         self.game_sections["locationSection"].open(location)
         print(("Changing to location {0}").format(location))
+        self.change_main_section_state(MainSectionState.LOCATION)
 
     def display_sublocation(self, location, sublocation):
         if self.main_section_state == MainSectionState.SUBLOCATION:
