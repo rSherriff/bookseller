@@ -243,14 +243,16 @@ class Engine(abc.ABC):
 
         OpenNotificationDialog(self, "The game must be restarted for this option to take effect.", "Menu").perform()
             
-    def open_confirmation_dialog(self, text, confirmation_action, section):
-        self.misc_sections["confirmationDialog"].setup(text, confirmation_action, section)
+    def open_confirmation_dialog(self, text, confirmation_action, section, enable_ui_on_confirm):
+        self.misc_sections["confirmationDialog"].setup(text, confirmation_action, section, enable_ui_on_confirm)
         self.enable_section("confirmationDialog")
         self.disable_ui_section(section)
 
-    def close_confirmation_dialog(self, section):
+    def close_confirmation_dialog(self, section, enable_ui):
         self.disable_section("confirmationDialog")
-        self.enable_ui_section(section)
+
+        if enable_ui:
+            self.enable_ui_section(section)
 
     def is_confirmation_dialog_open(self):
         return "confirmationDialog" not in self.disabled_sections

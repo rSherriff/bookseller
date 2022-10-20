@@ -24,9 +24,11 @@ class ConfirmationUI(UI):
             self.section.engine, None), tiles=button_tiles)
         self.add_element(self.close_button)
 
-    def reset(self, confirmation_action, section):
+    def reset(self, confirmation_action, section, enable_ui_on_confirm):
         self.confirm_button.set_action(confirmation_action)
 
-        close_action=CloseConfirmationDialog(self.section.engine, section)
+        close_action=CloseConfirmationDialog(self.section.engine, section, enable_ui_on_confirm)
         self.confirm_close_button.set_action(close_action)
+
+        close_action=CloseConfirmationDialog(self.section.engine, section, True) #Always enable UI on negative
         self.close_button.set_action(close_action)
