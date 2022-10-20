@@ -20,7 +20,7 @@ class ShopSection(Section):
         self.shop = None
         self.ui = ShopUI(self,x,y,self.tiles["graphic"])
 
-    def setup(self, shop_location):
+    def open(self, shop_location):
         self.shop = shop_manager[shop_location.name]  
         self.refresh()
 
@@ -48,7 +48,7 @@ class ShopSection(Section):
             console.print(button_x,shop_screen_info["books"]["y"]+ (count * shop_screen_info["books"]["gap"]),"Buy")
             count += 1
 
-        self.ui.render(console)
+        #self.ui.render(console) We are not rendering the UI, this may cause issues! This makes the current buttons work!
       
     def mousedown(self,button,x,y):
         pass

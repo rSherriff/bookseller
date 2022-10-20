@@ -96,6 +96,9 @@ class Section:
     def refresh(self):
         pass
 
+    def open(self):
+        pass
+
     def close(self):
         pass
 

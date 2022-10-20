@@ -16,6 +16,14 @@ class ChangePlayerLocationAction(Action):
     def perform(self):
         self.engine.change_player_location(self.location)
 
+class ChangePlayerSublocationAction(Action):
+    def __init__(self, engine, location) -> None:
+        super().__init__(engine)
+        self.location = location
+
+    def perform(self):
+        self.engine.change_player_sublocation(self.location)
+
 class PurchaseBook(Action):
     def __init__(self, engine, shop_name, book):
         super().__init__(engine)
