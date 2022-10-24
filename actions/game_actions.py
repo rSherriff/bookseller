@@ -1,4 +1,7 @@
+from utils.definitions import TravelStatus
+
 from actions.actions import Action
+
 
 class DisplayCurrentLocationAction(Action):
     def perform(self) -> None:
@@ -43,9 +46,12 @@ class OpenChangePlayerLocationConfirmationAction(Action):
         self.confirmation_action = confirmation_action
 
     def perform(self) -> None:
-        if not self.engine.player.location == self.location:
+        travelStatus = self.engine.can_player_change_location(self.location)
+        if travelStatus == TravelStatus.FINE:
             return self.engine.open_confirmation_dialog(self.text, self.confirmation_action, self.section, self.enable_ui_on_confirm)
-        else:
+        elif travelStatus == TravelStatus.ALREADY_PRESENT:
             return self.engine.open_notification_dialog("You are already at this location!", self.section)
+        elif travelStatus == TravelStatus.DAY_OVER:
+            return self.engine.open_notification_dialog("It's getting late, you should return home.", self.section)
 
 

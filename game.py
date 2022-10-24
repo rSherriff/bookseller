@@ -1,8 +1,11 @@
 import json
 from collections import OrderedDict
+from datetime import date, datetime, timedelta
 from enum import Enum, auto
+from sqlite3 import Date
 from threading import Timer
 from unicodedata import name
+from xmlrpc.client import DateTime
 
 from pygame import mixer
 
@@ -15,13 +18,18 @@ from sections.confirmation import Confirmation
 from sections.home_section import HomeSection
 from sections.info_section import InfoSection
 from sections.intro_section import IntroSection
+from sections.location_section import LocationSection
 from sections.map_section import MapSection
 from sections.nav_section import NavSection
 from sections.notification import Notification
 from sections.shop_section import ShopSection
-from sections.location_section import LocationSection
 from shops import *
+from utils.definitions import TravelStatus
 
+game_rules = {
+    "LocationTravelTimeIncrement" : 1,
+    "DayEndHour" : 17
+}
 
 class MainSectionState(Enum):
     NONE = auto(),
@@ -32,17 +40,36 @@ class MainSectionState(Enum):
 class PlayerState:
     def __init__(self) -> None:
         self.name = "Player"
-        self.day = 0
         self.location = "Home"
         self.sublocation = "Home"
         self.stock = Stock("PInv")
 
+class TimeState:
+    def __init__(self) -> None:
+        self.dt = datetime(1983,4,13,12)
+
+    def increment_day(self):
+        self.dt += timedelta(day=1)
+        self.dt.hour = 0
+
+    def get_hour(self):
+        return self.dt.hour
+
+    def get_date_string(self):
+        return self.dt.strftime("%a - %d/%m/%y")
+
+    def get_hour_string(self):
+        return self.dt.strftime("%H:%M")
+
+    def increment_time(self, hours):
+        self.dt += timedelta(hours=hours)
 
 class Game(Engine):
     def __init__(self, teminal_width: int, terminal_height: int):
         super().__init__(teminal_width, terminal_height)
 
         self.player = PlayerState()
+        self.time = TimeState()
 
         self.main_section_state = MainSectionState.NONE
 
@@ -136,15 +163,32 @@ class Game(Engine):
         self.disable_section("homeSection")
         self.disable_section("clientSection")
         self.disable_section("locationSection")
+        
 
+    def can_player_change_location(self, location):
+        if self.time.get_hour() >= game_rules["DayEndHour"] and location != "Home":
+            return TravelStatus.DAY_OVER
+        elif location == self.player.location:
+            return TravelStatus.ALREADY_PRESENT
+        else:
+            return TravelStatus.FINE
+
+    def can_player_change_sublocation(self, sublocation):
+        if self.time.get_hour() >= game_rules["DayEndHour"] and sublocation != "Home":
+            return TravelStatus.DAY_OVER
+        elif sublocation == self.player.sublocation:
+            return TravelStatus.ALREADY_PRESENT
+        else:
+            return TravelStatus.FINE
 
     def change_player_location(self, location):
-        if not location == self.player.location:
+        if self.can_player_change_location(location):
+            self.time.increment_time(game_rules["LocationTravelTimeIncrement"])
             self.player.location = location
             self.display_current_location()
 
     def change_player_sublocation(self, sublocation):
-        if not sublocation == self.player.sublocation:
+        if self.can_player_change_location(sublocation):
             self.player.sublocation = sublocation
             self.display_current_sublocation()
 
@@ -156,4 +200,8 @@ class Game(Engine):
             self.player.stock.add_book(book)
             for _, section in self.get_active_sections():
                 section.refresh()
+
+    def increment_day(self):
+        self.time.increment_day()
+
         

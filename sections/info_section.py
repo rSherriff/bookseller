@@ -13,13 +13,14 @@ class InfoSection(Section):
     def render(self, console):
         super().render(console)
 
-        console.print(self.x+1,self.y+3, ("Day: {0}").format(self.engine.player.day))
-        console.print(self.x+1,self.y+4, ("Loc: {0}").format(self.engine.player.location))
-        console.print(self.x+1,self.y+5, "Inv:")
+        console.print(self.x+1,self.y+3, self.engine.time.get_date_string())
+        console.print(self.x+1,self.y+4, self.engine.time.get_hour_string())
+        console.print(self.x+1,self.y+5, ("Loc: {0}").format(self.engine.player.location))
+        console.print(self.x+1,self.y+6, "Inv:")
 
         count = 0
         for book in self.engine.player.stock.values():
-            console.print(self.x+5,self.y+6+count, book.id)
+            console.print(self.x+5,self.y+7+count, book.id)
             count += 1
 
       
