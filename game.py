@@ -118,8 +118,8 @@ class Game(Engine):
         
         
         self.misc_sections = OrderedDict()
-        self.misc_sections[NOTIFICATION_DIALOG] = Notification(self, 7, 9, 37, 10, NOTIFICATION_DIALOG)
-        self.misc_sections[CONFIRMATION_DIALOG] = Confirmation(self, 7, 9, 37, 10, CONFIRMATION_DIALOG)
+        self.misc_sections[NOTIFICATION_DIALOG] = Notification(self, 0,0, self.screen_width, self.screen_height, NOTIFICATION_DIALOG)
+        self.misc_sections[CONFIRMATION_DIALOG] = Confirmation(self, 0,0, self.screen_width, self.screen_height, CONFIRMATION_DIALOG)
 
         self.completion_sections = OrderedDict()
 

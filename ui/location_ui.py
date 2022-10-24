@@ -16,6 +16,6 @@ class LocationUI(UI):
             bd = [x, y + ( y_gap * count), 3, 1]  # Button Dimensions
             button_tiles = self.tiles[bd[0]:bd[0] + bd[2], bd[1]:bd[1] + bd[3]]
             b = Button(x=bd[0], y=bd[1], width=bd[2], height=bd[3], click_action=OpenConfirmationDialog(
-            self.section.engine, "Travel to {0}".format(sublocation_name), ChangePlayerSublocationAction(self.section.engine, sublocation_name), self.section.name, enable_ui_on_confirm=False), tiles=button_tiles)
+            self.section.engine, "Travel to {0}?".format(sublocation_name), ChangePlayerSublocationAction(self.section.engine, sublocation_name), self.section.name, enable_ui_on_confirm=False), tiles=button_tiles)
             self.add_element(b)
             count += 1
