@@ -28,7 +28,8 @@ from utils.definitions import TravelStatus
 
 game_rules = {
     "LocationTravelTimeIncrement" : 1,
-    "DayEndHour" : 17
+    "SublocationTravelTimeIncrement": 0,
+    "DayEndHour" : 18
 }
 
 class MainSectionState(Enum):
@@ -116,12 +117,6 @@ class Game(Engine):
         self.disabled_sections = ["confirmationDialog", "notificationDialog", "mapSection", "shopSection", "clientSection", "homeSection", "locationSection"]
         self.disabled_ui_sections = ["confirmationDialog", "notificationDialog"]
 
-    def display_map(self):
-        self.close_all_main_sections()
-        self.enable_section("mapSection")
-        self.change_main_section_state(MainSectionState.MAP)
-        self.game_sections["mapSection"].open()
-
     def close_all_main_sections(self):
         self.game_sections["shopSection"].close()
         self.game_sections["mapSection"].close()
@@ -155,6 +150,7 @@ class Game(Engine):
 
     def display_sublocation(self, location, sublocation):
         if self.main_section_state == MainSectionState.SUBLOCATION:
+            print("WARNING! - Attempted to change to a sublocation from another sublocation!")
             return
 
         print(("Changing to sublocation {0}").format(sublocation))
@@ -173,7 +169,7 @@ class Game(Engine):
         self.change_main_section_state(MainSectionState.SUBLOCATION)
 
     def can_player_change_location(self, location):
-        if self.time.get_hour() >= game_rules["DayEndHour"] and location != "Home":
+        if (self.time.get_hour() + game_rules["LocationTravelTimeIncrement"]) >= game_rules["DayEndHour"] and location != "Home":
             return TravelStatus.DAY_OVER
         elif location == self.player.location:
             return TravelStatus.ALREADY_PRESENT
@@ -181,7 +177,7 @@ class Game(Engine):
             return TravelStatus.FINE
 
     def can_player_change_sublocation(self, sublocation):
-        if self.time.get_hour() >= game_rules["DayEndHour"] and sublocation != "Home":
+        if (self.time.get_hour() + game_rules["SublocationTravelTimeIncrement"]) >= game_rules["DayEndHour"] and sublocation != "Home":
             return TravelStatus.DAY_OVER
         elif sublocation == self.player.sublocation:
             return TravelStatus.ALREADY_PRESENT
@@ -201,6 +197,13 @@ class Game(Engine):
 
     def change_main_section_state(self, new_state):
         self.main_section_state = new_state
+
+    def display_map(self):
+        self.close_all_main_sections()
+        self.enable_section("mapSection")
+        self.change_main_section_state(MainSectionState.MAP)
+        self.game_sections["mapSection"].open()
+
 
     #*********************************************
     # Books
