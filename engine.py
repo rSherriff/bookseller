@@ -27,6 +27,9 @@ class GameState(Enum):
     MENU = auto()
     IN_GAME = auto()
 
+NOTIFICATION_DIALOG = "notificationDialog"
+CONFIRMATION_DIALOG = "confirmationDialog"
+
 class Engine(abc.ABC):
     def __init__(self, teminal_width: int, terminal_height: int):
 
@@ -244,26 +247,26 @@ class Engine(abc.ABC):
         OpenNotificationDialog(self, "The game must be restarted for this option to take effect.", "Menu").perform()
             
     def open_confirmation_dialog(self, text, confirmation_action, section, enable_ui_on_confirm):
-        self.misc_sections["confirmationDialog"].setup(text, confirmation_action, section, enable_ui_on_confirm)
-        self.enable_section("confirmationDialog")
+        self.misc_sections[CONFIRMATION_DIALOG].setup(text, confirmation_action, section, enable_ui_on_confirm)
+        self.enable_section(CONFIRMATION_DIALOG)
         self.disable_ui_section(section)
 
     def close_confirmation_dialog(self, section, enable_ui):
-        self.disable_section("confirmationDialog")
+        self.disable_section(CONFIRMATION_DIALOG)
 
         if enable_ui:
             self.enable_ui_section(section)
 
     def is_confirmation_dialog_open(self):
-        return "confirmationDialog" not in self.disabled_sections
+        return CONFIRMATION_DIALOG not in self.disabled_sections
 
     def open_notification_dialog(self, text, section):
-        self.misc_sections["notificationDialog"].setup(text, section)
-        self.enable_section("notificationDialog")
+        self.misc_sections[NOTIFICATION_DIALOG].setup(text, section)
+        self.enable_section(NOTIFICATION_DIALOG)
         self.disable_ui_section(section)
 
     def close_notification_dialog(self, section):
-        self.disable_section("notificationDialog")
+        self.disable_section(NOTIFICATION_DIALOG)
         self.enable_ui_section(section)
 
     def is_ui_paused(self):

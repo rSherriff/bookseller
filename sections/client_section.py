@@ -1,4 +1,5 @@
 from enum import Enum, auto
+import string
 from threading import Timer
 from tkinter.dialog import DIALOG_ICON
 
@@ -61,11 +62,9 @@ class ClientSectionState(Enum):
     DIALOG = auto()
 
 class ClientSection(Section):
-    def __init__(self, engine, x: int, y: int, width: int, height: int):
-        super().__init__(engine, x, y, width, height, "client_section.xp")   
-
-        self.name = "clientSection"   
-
+    def __init__(self, engine, x: int, y: int, width: int, height: int, name: string):
+        super().__init__(engine, x, y, width, height, "client_section.xp", name)   
+        
         self.client_character_tiles = Image(self.width, self.height, "images/client_character.xp")
         self.client_misc_tiles = Image(self.width, self.height, "images/client_misc.xp")
 

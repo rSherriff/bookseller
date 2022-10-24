@@ -1,11 +1,12 @@
+import string
 from ui.nav_ui import NavUI
 
 from sections.section import Section
 
 
 class NavSection(Section):
-    def __init__(self, engine, x: int, y: int, width: int, height: int):
-        super().__init__(engine, x, y, width, height, "nav_section.xp")   
+    def __init__(self, engine, x: int, y: int, width: int, height: int, name:str):
+        super().__init__(engine, x, y, width, height, "nav_section.xp",name)   
 
         self.ui = NavUI(self,x,y,self.tiles["graphic"])
 

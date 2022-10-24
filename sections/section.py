@@ -12,9 +12,10 @@ from pygame import mixer, sndarray
 
 
 class Section:
-    def __init__(self, engine, x: int, y: int, width: int, height: int, xp_filepath: str = ""):
+    def __init__(self, engine, x: int, y: int, width: int, height: int, xp_filepath: str = "", name: str =""):
         self.engine = engine
 
+        self.name = name
         self.x = x
         self.y = y
         self.width = width

@@ -1,3 +1,4 @@
+import string
 from sections.section import Section
 from shops import *
 from ui.shop_ui import ShopUI
@@ -13,10 +14,9 @@ shop_screen_info = {
 }
 
 class ShopSection(Section):
-    def __init__(self, engine, x: int, y: int, width: int, height: int):
-        super().__init__(engine, x, y, width, height, "shop_section.xp")
+    def __init__(self, engine, x: int, y: int, width: int, height: int, name: str):
+        super().__init__(engine, x, y, width, height, "shop_section.xp", name)
 
-        self.name = "ShopSection"
         self.shop = None
         self.ui = ShopUI(self,x,y,self.tiles["graphic"])
 

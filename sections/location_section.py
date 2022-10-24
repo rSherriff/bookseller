@@ -1,3 +1,4 @@
+import string
 from ui.location_ui import LocationUI
 
 from sections.section import Section
@@ -13,9 +14,8 @@ location_screen_info = {
 }
 
 class LocationSection(Section):
-    def __init__(self, engine, x: int, y: int, width: int, height: int):
-        super().__init__(engine, x, y, width, height, "location_section.xp")     
-        self.name = "locationSection"
+    def __init__(self, engine, x: int, y: int, width: int, height: int, name: str):
+        super().__init__(engine, x, y, width, height, "location_section.xp", name)     
         self.ui = LocationUI(self,x,y,self.tiles["graphic"])
 
     def open(self, location_name):

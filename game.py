@@ -11,7 +11,7 @@ from pygame import mixer
 
 from books import *
 from books import Stock
-from engine import Engine, GameState
+from engine import CONFIRMATION_DIALOG, NOTIFICATION_DIALOG, Engine, GameState
 from locations import *
 from sections.client_section import ClientSection
 from sections.confirmation import Confirmation
@@ -31,6 +31,15 @@ game_rules = {
     "SublocationTravelTimeIncrement": 0,
     "DayEndHour" : 18
 }
+
+INTRO_SECTION = "introSection"
+MAP_SECTION = "mapSection"
+CLIENT_SECTION = "clientSection"
+SHOP_SECTION = "shopSection"
+HOME_SECTION = "homeSection"
+LOCATION_SECTION = "locationSection"
+NAV_SECTION = "navSection"
+INFO_SECTION = "infoSection"
 
 class MainSectionState(Enum):
     NONE = auto(),
@@ -94,41 +103,41 @@ class Game(Engine):
         self.disabled_ui_sections = []
 
         self.intro_sections = OrderedDict()
-        self.intro_sections["introSection"] = IntroSection(self,0,0,self.screen_width, self.screen_height)
+        self.intro_sections[INTRO_SECTION] = IntroSection(self,0,0,self.screen_width, self.screen_height, INTRO_SECTION)
 
         self.menu_sections = OrderedDict()
 
         self.game_sections = OrderedDict()
-        self.game_sections["clientSection"] = ClientSection(self, 0,0, self.screen_width, self.screen_height)
-        self.game_sections["mapSection"] = MapSection(self, 0,0, self.screen_width, self.screen_height)
-        self.game_sections["shopSection"] = ShopSection(self, 0,0, self.screen_width, self.screen_height)
-        self.game_sections["homeSection"] = HomeSection(self, 0,0, self.screen_width, self.screen_height)
-        self.game_sections["locationSection"] = LocationSection(self, 0,0, self.screen_width, self.screen_height)
-        self.game_sections["navSection"] = NavSection(self, 0,self.screen_height - 10, self.screen_width, 10)
-        self.game_sections["infoSection"] = InfoSection(self, self.screen_width - 15,0, 15, self.screen_height - 10)
+        self.game_sections[CLIENT_SECTION] = ClientSection(self, 0,0, self.screen_width, self.screen_height, CLIENT_SECTION)
+        self.game_sections[MAP_SECTION] = MapSection(self, 0,0, self.screen_width, self.screen_height, MAP_SECTION)
+        self.game_sections[SHOP_SECTION] = ShopSection(self, 0,0, self.screen_width, self.screen_height, SHOP_SECTION)
+        self.game_sections[HOME_SECTION] = HomeSection(self, 0,0, self.screen_width, self.screen_height, HOME_SECTION)
+        self.game_sections[LOCATION_SECTION] = LocationSection(self, 0,0, self.screen_width, self.screen_height, LOCATION_SECTION)
+        self.game_sections[NAV_SECTION] = NavSection(self, 0,self.screen_height - 10, self.screen_width, 10, NAV_SECTION)
+        self.game_sections[INFO_SECTION] = InfoSection(self, self.screen_width - 15,0, 15, self.screen_height - 10, INFO_SECTION)
         
         
         self.misc_sections = OrderedDict()
-        self.misc_sections["notificationDialog"] = Notification(self, 7, 9, 37, 10)
-        self.misc_sections["confirmationDialog"] = Confirmation(self, 7, 9, 37, 10)
+        self.misc_sections[NOTIFICATION_DIALOG] = Notification(self, 7, 9, 37, 10, NOTIFICATION_DIALOG)
+        self.misc_sections[CONFIRMATION_DIALOG] = Confirmation(self, 7, 9, 37, 10, CONFIRMATION_DIALOG)
 
         self.completion_sections = OrderedDict()
 
-        self.disabled_sections = ["confirmationDialog", "notificationDialog", "mapSection", "shopSection", "clientSection", "homeSection", "locationSection"]
-        self.disabled_ui_sections = ["confirmationDialog", "notificationDialog"]
+        self.disabled_sections = [CONFIRMATION_DIALOG, NOTIFICATION_DIALOG, MAP_SECTION, SHOP_SECTION, CLIENT_SECTION, HOME_SECTION, LOCATION_SECTION]
+        self.disabled_ui_sections = [CONFIRMATION_DIALOG, NOTIFICATION_DIALOG]
 
     def close_all_main_sections(self):
-        self.game_sections["shopSection"].close()
-        self.game_sections["mapSection"].close()
-        self.game_sections["homeSection"].close()
-        self.game_sections["clientSection"].close()
-        self.game_sections["locationSection"].close()
+        self.game_sections[SHOP_SECTION].close()
+        self.game_sections[MAP_SECTION].close()
+        self.game_sections[HOME_SECTION].close()
+        self.game_sections[CLIENT_SECTION].close()
+        self.game_sections[LOCATION_SECTION].close()
 
-        self.disable_section("shopSection")
-        self.disable_section("mapSection")
-        self.disable_section("homeSection")
-        self.disable_section("clientSection")
-        self.disable_section("locationSection")
+        self.disable_section(SHOP_SECTION)
+        self.disable_section(MAP_SECTION)
+        self.disable_section(HOME_SECTION)
+        self.disable_section(CLIENT_SECTION)
+        self.disable_section(LOCATION_SECTION)
 
     #*********************************************
     # Locations
@@ -143,8 +152,8 @@ class Game(Engine):
     def display_location(self, location):
         self.player.sublocation = "none"
         self.close_all_main_sections()
-        self.enable_section("locationSection")
-        self.game_sections["locationSection"].open(location)
+        self.enable_section(LOCATION_SECTION)
+        self.game_sections[LOCATION_SECTION].open(location)
         print(("Changing to location {0}").format(location))
         self.change_main_section_state(MainSectionState.LOCATION)
 
@@ -159,12 +168,12 @@ class Game(Engine):
         self.close_all_main_sections()
 
         if sublocation.type == LocationType.CLIENT:
-            self.enable_section("clientSection") 
+            self.enable_section(CLIENT_SECTION) 
         elif sublocation.type == LocationType.SHOP:
-            self.enable_section("shopSection")
-            self.game_sections["shopSection"].open(sublocation)
+            self.enable_section(SHOP_SECTION)
+            self.game_sections[SHOP_SECTION].open(sublocation)
         elif sublocation.type == LocationType.HOME:
-            self.enable_section("homeSection")
+            self.enable_section(HOME_SECTION)
 
         self.change_main_section_state(MainSectionState.SUBLOCATION)
 
@@ -200,9 +209,9 @@ class Game(Engine):
 
     def display_map(self):
         self.close_all_main_sections()
-        self.enable_section("mapSection")
+        self.enable_section(MAP_SECTION)
         self.change_main_section_state(MainSectionState.MAP)
-        self.game_sections["mapSection"].open()
+        self.game_sections[MAP_SECTION].open()
 
 
     #*********************************************

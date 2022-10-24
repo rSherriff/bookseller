@@ -1,3 +1,4 @@
+import string
 from ui.map_ui import MapUI
 
 from sections.section import Section
@@ -10,11 +11,10 @@ map_screen_info = {
 }
 
 class MapSection(Section):
-    def __init__(self, engine, x: int, y: int, width: int, height: int):
-        super().__init__(engine, x, y, width, height, "map_section.xp")      
+    def __init__(self, engine, x: int, y: int, width: int, height: int, name: str):
+        super().__init__(engine, x, y, width, height, "map_section.xp", name)      
 
         self.ui = MapUI(self,x,y,self.tiles["graphic"])
-        self.name = "mapSection"
 
     def open(self):
         self.refresh()

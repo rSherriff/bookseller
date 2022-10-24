@@ -4,8 +4,8 @@ from ui.confirmation_ui import ConfirmationUI
 
 
 class Confirmation(Section):
-    def __init__(self, engine, x: int, y: int, width: int, height: int):
-        super().__init__(engine, x, y, width, height, "confirmation_dialog.xp")
+    def __init__(self, engine, x: int, y: int, width: int, height: int, name:str):
+        super().__init__(engine, x, y, width, height, "confirmation_dialog.xp", name)
 
         self.text = ""
         self.ui = ConfirmationUI(self, x, y, self.tiles["graphic"])

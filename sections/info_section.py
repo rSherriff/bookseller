@@ -1,11 +1,12 @@
+import string
 import tcod
 
 from sections.section import Section
 
 
 class InfoSection(Section):
-    def __init__(self, engine, x: int, y: int, width: int, height: int):
-        super().__init__(engine, x, y, width, height, "info_section.xp")      
+    def __init__(self, engine, x: int, y: int, width: int, height: int, name:str):
+        super().__init__(engine, x, y, width, height, "info_section.xp",name)      
 
     def update(self):
         super().update()
