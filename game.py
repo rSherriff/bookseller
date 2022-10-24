@@ -84,6 +84,10 @@ class Game(Engine):
     def load_fonts(self):
         pass
 
+    #*********************************************
+    # Sections
+    #*********************************************
+
     def setup_sections(self):
         self.disabled_sections = []
         self.disabled_ui_sections = []
@@ -118,6 +122,23 @@ class Game(Engine):
         self.change_main_section_state(MainSectionState.MAP)
         self.game_sections["mapSection"].open()
 
+    def close_all_main_sections(self):
+        self.game_sections["shopSection"].close()
+        self.game_sections["mapSection"].close()
+        self.game_sections["homeSection"].close()
+        self.game_sections["clientSection"].close()
+        self.game_sections["locationSection"].close()
+
+        self.disable_section("shopSection")
+        self.disable_section("mapSection")
+        self.disable_section("homeSection")
+        self.disable_section("clientSection")
+        self.disable_section("locationSection")
+
+    #*********************************************
+    # Locations
+    #*********************************************
+
     def display_current_location(self):
         self.display_location(self.player.location)
     
@@ -151,20 +172,6 @@ class Game(Engine):
 
         self.change_main_section_state(MainSectionState.SUBLOCATION)
 
-    def close_all_main_sections(self):
-        self.game_sections["shopSection"].close()
-        self.game_sections["mapSection"].close()
-        self.game_sections["homeSection"].close()
-        self.game_sections["clientSection"].close()
-        self.game_sections["locationSection"].close()
-
-        self.disable_section("shopSection")
-        self.disable_section("mapSection")
-        self.disable_section("homeSection")
-        self.disable_section("clientSection")
-        self.disable_section("locationSection")
-        
-
     def can_player_change_location(self, location):
         if self.time.get_hour() >= game_rules["DayEndHour"] and location != "Home":
             return TravelStatus.DAY_OVER
@@ -195,11 +202,19 @@ class Game(Engine):
     def change_main_section_state(self, new_state):
         self.main_section_state = new_state
 
+    #*********************************************
+    # Books
+    #*********************************************
+
     def purchase_book(self, shop_name, book):
         if shop_manager[shop_name].stock.remove_book(book):
             self.player.stock.add_book(book)
             for _, section in self.get_active_sections():
                 section.refresh()
+
+    #*********************************************
+    # Time
+    #*********************************************
 
     def increment_day(self):
         self.time.increment_day()
