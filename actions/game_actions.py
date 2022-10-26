@@ -3,6 +3,10 @@ from utils.definitions import TravelStatus, AdvanceDayStatus
 from actions.actions import Action
 
 
+#*********************************************
+# Locations
+#*********************************************
+
 class DisplayCurrentLocationAction(Action):
     def perform(self) -> None:
         self.engine.display_current_location()
@@ -27,19 +31,6 @@ class ChangePlayerSublocationAction(Action):
     def perform(self):
         self.engine.change_player_sublocation(self.location)
 
-class PurchaseBook(Action):
-    def __init__(self, engine, shop_name, book):
-        super().__init__(engine)
-        self.shop_name = shop_name
-        self.book = book
-
-    def perform(self):
-        self.engine.purchase_book(self.shop_name, self.book)
-
-class AdvanceDayAction(Action):
-    def perform(self) -> None:
-        self.engine.advance_day()
-
 class OpenChangePlayerLocationConfirmationAction(Action):
     def __init__(self, engine, text, location, confirmation_action,section, enable_ui_on_confirm) -> None:
         super().__init__(engine)
@@ -57,6 +48,29 @@ class OpenChangePlayerLocationConfirmationAction(Action):
             return self.engine.open_notification_dialog("You are already at this location!", self.section)
         elif travelStatus == TravelStatus.DAY_OVER:
             return self.engine.open_notification_dialog("It's getting late, you should return home.", self.section)
+
+
+#*********************************************
+# Books
+#*********************************************
+
+class PurchaseBook(Action):
+    def __init__(self, engine, shop_name, book):
+        super().__init__(engine)
+        self.shop_name = shop_name
+        self.book = book
+
+    def perform(self):
+        self.engine.purchase_book(self.shop_name, self.book)
+
+
+#*********************************************
+# Time
+#*********************************************
+
+class AdvanceDayAction(Action):
+    def perform(self) -> None:
+        self.engine.advance_day()
 
 class OpenAdvanceDayConfirmationAction(Action):
     def __init__(self, engine, text, confirmation_action,section, enable_ui_on_confirm) -> None:
