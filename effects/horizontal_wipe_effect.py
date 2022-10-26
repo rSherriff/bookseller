@@ -14,9 +14,9 @@ class HorizontalWipeEffect(Effect):
         self.speed = 54
         self.lifespan = 2.5
         
-    def start(self, direction: HorizontalWipeDirection):
+    def start(self, parameters):
         super().start()
-        self.direction = direction
+        self.direction = parameters[0]
         self.current_wipe_length = 0
         
     def render(self, console):

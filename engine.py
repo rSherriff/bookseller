@@ -96,7 +96,7 @@ class Engine(abc.ABC):
         if self.full_screen_effect.in_effect == True:
             self.full_screen_effect.render(root_console)
         else:
-            self.full_screen_effect.set_tiles(root_console.tiles_rgb)
+            self.last_rendered_frame_tiles = root_console.tiles_rgb
 
         #root_console.print(40, 1, str(self.mouse_location), (255,255,255))
 
@@ -129,6 +129,14 @@ class Engine(abc.ABC):
 
     def setup_effects(self):
         self.full_screen_effect = MeltWipeEffect(self, 0, 0, self.screen_width, self.screen_height, MeltWipeEffectType.RANDOM, 20)
+
+    def set_full_screen_effect(self, effect, parameters=None):
+        self.full_screen_effect = effect
+        self.full_screen_effect_parameters = parameters
+        self.full_screen_effect.set_tiles(self.last_rendered_frame_tiles)
+
+    def start_full_screen_effect(self):
+        self.full_screen_effect.start(self.full_screen_effect_parameters)
 
     @abc.abstractmethod
     def setup_sections(self): 
