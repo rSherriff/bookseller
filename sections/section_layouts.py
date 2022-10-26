@@ -6,3 +6,8 @@ home_screen_info = {
         "height":5
     }
 }
+
+dialog_info = {
+    "max_width" : 40,
+    "button_width" : 7
+}
