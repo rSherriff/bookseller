@@ -6,6 +6,7 @@ from ui.notification_ui import NotificationUI
 
 from sections.section import Section
 
+button_width = 7
 
 class Notification(Section):
     def __init__(self, engine, x: int, y: int, width: int, height: int, name:str):
@@ -16,12 +17,14 @@ class Notification(Section):
     def setup(self, text, section):
         self.text = text
 
-        self.render_width = min(len(self.text), 25)
+        self.render_width = min(len(self.text), 25) 
         self.render_height = ceil(len(self.text) / self.render_width)
         self.render_width += 4
         self.render_height += 10
         
         self.render_width += self.width % 2
+
+        self.render_width = max(self.render_width, (button_width * 2) + 7)
 
         self.x = int(self.width / 2) - int(self.render_width / 2)
         self.y = int(self.height / 2) - int(self.render_height / 2)

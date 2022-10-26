@@ -6,6 +6,7 @@ from ui.confirmation_ui import ConfirmationUI
 
 from sections.section import Section
 
+button_width = 7
 
 class Confirmation(Section):
     def __init__(self, engine, x: int, y: int, width: int, height: int, name:str):
@@ -23,6 +24,8 @@ class Confirmation(Section):
         self.render_height += 10
 
         self.render_width += self.width % 2
+
+        self.render_width = max(self.render_width, (button_width * 2) + 7)
 
         self.x = int(self.width / 2) - int(self.render_width / 2)
         self.y = int(self.height / 2) - int(self.render_height / 2)
