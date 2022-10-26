@@ -24,12 +24,14 @@ from sections.nav_section import NavSection
 from sections.notification import Notification
 from sections.shop_section import ShopSection
 from shops import *
-from utils.definitions import TravelStatus
+from utils.definitions import TravelStatus, AdvanceDayStatus
 
 game_rules = {
     "LocationTravelTimeIncrement" : 1,
     "SublocationTravelTimeIncrement": 0,
-    "DayEndHour" : 18
+    "DayStartHour": 10,
+    "DayEndHour" : 18,
+    "DayAdvanceHour": 17
 }
 
 INTRO_SECTION = "introSection"
@@ -56,11 +58,11 @@ class PlayerState:
 
 class TimeState:
     def __init__(self) -> None:
-        self.dt = datetime(1983,4,13,12)
+        self.dt = datetime(1983,4,13,game_rules["DayStartHour"])
 
-    def increment_day(self):
-        self.dt += timedelta(day=1)
-        self.dt.hour = 0
+    def advance_day(self):
+        self.dt += timedelta(days=1)
+        self.dt = self.dt.replace(hour= game_rules["DayStartHour"])
 
     def get_hour(self):
         return self.dt.hour
@@ -228,7 +230,15 @@ class Game(Engine):
     # Time
     #*********************************************
 
-    def increment_day(self):
-        self.time.increment_day()
+    def advance_day(self):
+        self.full_screen_effect.start()
+        self.time.advance_day()
+
+    def can_advance_day(self):
+        if self.time.get_hour() < game_rules["DayAdvanceHour"]:
+            return AdvanceDayStatus.TOO_EARLY
+        else:
+            return AdvanceDayStatus.FINE
+        
 
         

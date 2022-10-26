@@ -1,4 +1,4 @@
-from utils.definitions import TravelStatus
+from utils.definitions import TravelStatus, AdvanceDayStatus
 
 from actions.actions import Action
 
@@ -36,6 +36,10 @@ class PurchaseBook(Action):
     def perform(self):
         self.engine.purchase_book(self.shop_name, self.book)
 
+class AdvanceDayAction(Action):
+    def perform(self) -> None:
+        self.engine.advance_day()
+
 class OpenChangePlayerLocationConfirmationAction(Action):
     def __init__(self, engine, text, location, confirmation_action,section, enable_ui_on_confirm) -> None:
         super().__init__(engine)
@@ -53,5 +57,20 @@ class OpenChangePlayerLocationConfirmationAction(Action):
             return self.engine.open_notification_dialog("You are already at this location!", self.section)
         elif travelStatus == TravelStatus.DAY_OVER:
             return self.engine.open_notification_dialog("It's getting late, you should return home.", self.section)
+
+class OpenAdvanceDayConfirmationAction(Action):
+    def __init__(self, engine, text, confirmation_action,section, enable_ui_on_confirm) -> None:
+        super().__init__(engine)
+        self.text = text
+        self.section = section
+        self.enable_ui_on_confirm = enable_ui_on_confirm
+        self.confirmation_action = confirmation_action
+
+    def perform(self) -> None:
+        advanceDayStatus = self.engine.can_advance_day()
+        if advanceDayStatus == AdvanceDayStatus.FINE:
+            return self.engine.open_confirmation_dialog(self.text, self.confirmation_action, self.section, self.enable_ui_on_confirm)
+        elif advanceDayStatus == AdvanceDayStatus.TOO_EARLY:
+            return self.engine.open_notification_dialog("It is too early to advance the day!", self.section)
 
 

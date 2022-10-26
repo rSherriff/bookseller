@@ -6,7 +6,8 @@ from sections.section import Section
 map_screen_info = {
     "locations":{
         ("Client", 12, 24, 7, 1),
-        ("Bloomsbury", 28, 10, 11, 1)
+        ("Bloomsbury", 28, 10, 11, 1),
+        ("Home", 36, 32, 5, 1),
     }
 }
 
