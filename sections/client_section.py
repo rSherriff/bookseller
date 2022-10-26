@@ -7,55 +7,12 @@ import tcod
 from image import Image
 
 from sections.section import Section
+from sections.section_layouts import client_misc_tiles_info, client_screen_info, client_character_info
 
 
 class CharacterStates(Enum):
     TALK_ONE = auto()
     TALK_TWO = auto()
-
-client_character_info = {
-    "x":2,
-    "y":2,
-    "width":11,
-    "height":14,
-    "sprites":{
-        "talk_one":{
-            "x":0,
-            "y":0
-        },
-        "talk_two":{
-            "x":12,
-            "y":0
-        }
-    }
-}
-
-client_misc_tiles_info = {
-    "speech_mark":
-    {
-        "x":0,
-        "y":0,
-        "width":3,
-        "height":3
-    }
-}
-
-client_screen_info = {
-    "text":
-    {
-        "x":18,
-        "y":4,
-        "width":30,
-        "height":10
-    },
-    "speech_mark":
-    {
-        "x":14,
-        "y":4,
-        "width":3,
-        "height":3
-    }
-}
 
 class ClientSectionState(Enum):
     IDLE = auto(),

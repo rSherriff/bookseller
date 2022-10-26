@@ -1,17 +1,11 @@
 import string
-from sections.section import Section
+
 from shops import *
 from ui.shop_ui import ShopUI
 
+from sections.section import Section
+from sections.section_layouts import shop_screen_info
 
-shop_screen_info = {
-    "books":{
-        "x":6,
-        "y":7,
-        "gap": 2,
-        "button_delta" : 25
-    }
-}
 
 class ShopSection(Section):
     def __init__(self, engine, x: int, y: int, width: int, height: int, name: str):

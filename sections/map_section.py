@@ -1,15 +1,10 @@
 import string
+
 from ui.map_ui import MapUI
 
 from sections.section import Section
+from sections.section_layouts import map_screen_info
 
-map_screen_info = {
-    "locations":{
-        ("Client", 12, 24, 7, 1),
-        ("Bloomsbury", 28, 10, 11, 1),
-        ("Home", 36, 32, 5, 1),
-    }
-}
 
 class MapSection(Section):
     def __init__(self, engine, x: int, y: int, width: int, height: int, name: str):

@@ -1,17 +1,11 @@
 import string
+
+from locations import location_manager
 from ui.location_ui import LocationUI
 
 from sections.section import Section
-from locations import location_manager
+from sections.section_layouts import location_screen_info
 
-location_screen_info = {
-    "locations":{
-        "x":6,
-        "y":7,
-        "gap": 2,
-        "button_delta" : 25
-    }
-}
 
 class LocationSection(Section):
     def __init__(self, engine, x: int, y: int, width: int, height: int, name: str):
