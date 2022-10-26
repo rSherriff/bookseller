@@ -2,12 +2,12 @@ import json
 from collections import OrderedDict
 from datetime import date, datetime, timedelta
 from enum import Enum, auto
-from sqlite3 import Date
 from threading import Timer
-from unicodedata import name
-from xmlrpc.client import DateTime
 
 from pygame import mixer
+
+from effects.horizontal_wipe_effect import HorizontalWipeDirection, HorizontalWipeEffect
+from effects.melt_effect import MeltWipeEffect, MeltWipeEffectType
 
 from books import *
 from books import Stock
@@ -84,7 +84,7 @@ class Game(Engine):
         self.time = TimeState()
 
         self.main_section_state = MainSectionState.NONE
-
+        self.setup_effects()
         self.display_current_sublocation()
 
     def create_new_save_data(self):
@@ -95,6 +95,15 @@ class Game(Engine):
 
     def load_fonts(self):
         pass
+
+    #*********************************************
+    # Effects
+    #*********************************************
+
+    def setup_effects(self):
+        super().setup_effects()
+        self.advance_day_effect = MeltWipeEffect(self, 0, 0, self.screen_width, self.screen_height, MeltWipeEffectType.RANDOM, 20)
+        self.change_location_effect = HorizontalWipeEffect(self, 0, 0, self.screen_width, self.screen_height)
 
     #*********************************************
     # Sections
@@ -200,6 +209,8 @@ class Game(Engine):
             self.time.increment_time(game_rules["LocationTravelTimeIncrement"])
             self.player.location = location
             self.display_current_location()
+            self.set_full_screen_effect(self.change_location_effect, [HorizontalWipeDirection.LEFT])
+            self.start_full_screen_effect()
 
     def change_player_sublocation(self, sublocation):
         if self.can_player_change_location(sublocation):
@@ -231,7 +242,8 @@ class Game(Engine):
     #*********************************************
 
     def advance_day(self):
-        self.full_screen_effect.start()
+        self.set_full_screen_effect(self.advance_day_effect)
+        self.start_full_screen_effect()
         self.time.advance_day()
 
     def can_advance_day(self):
