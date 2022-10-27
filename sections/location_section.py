@@ -34,7 +34,7 @@ class LocationSection(Section):
 
         count = 0
         for location in self.location.sublocations.values():
-            console.print(location_screen_info["locations"]["x"],location_screen_info["locations"]["y"]+ (count * location_screen_info["locations"]["gap"]),"{0}".format(location.name))
+            console.print(location_screen_info["locations"]["x"],location_screen_info["locations"]["y"]+ (count * location_screen_info["locations"]["gap"]),"{0}".format(location.name), fg=(255,255,255))
 
             button_x = location_screen_info["locations"]["x"] + location_screen_info["locations"]["button_delta"]
             console.print(button_x,location_screen_info["locations"]["y"]+ (count * location_screen_info["locations"]["gap"]),"Go")

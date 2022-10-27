@@ -9,6 +9,12 @@ class NavSection(Section):
         super().__init__(engine, x, y, width, height, "nav_section.xp",name)   
 
         self.ui = NavUI(self,x,y,self.tiles["graphic"])
+        
+    def open(self):
+        pass
+
+    def refresh(self):
+        self.ui.setup_nav_buttons()
 
     def update(self):
         super().update()

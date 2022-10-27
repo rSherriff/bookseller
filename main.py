@@ -8,8 +8,8 @@ from application_path import get_app_path
 from game import Game
 
 def main() -> None:
-    screen_width = 70
-    screen_height = 45
+    screen_width = 57
+    screen_height = 41
 
     terminal_height = screen_height 
     terminal_width = screen_width 

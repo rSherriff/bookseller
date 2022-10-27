@@ -7,6 +7,10 @@ from actions.actions import Action
 # Locations
 #*********************************************
 
+class DisplayCurrentSublocationAction(Action):
+    def perform(self) -> None:
+        self.engine.display_current_sublocation()
+
 class DisplayCurrentLocationAction(Action):
     def perform(self) -> None:
         self.engine.display_current_location()

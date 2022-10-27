@@ -145,11 +145,11 @@ class Engine(abc.ABC):
     def get_active_sections(self):
         sections = OrderedDict()
         if self.state == GameState.INTRO:
-            sections = self.intro_sections
+            sections = dict(filter(lambda elem: elem[0] not in self.disabled_sections, self.intro_sections.items()))
         elif self.state == GameState.MENU:
-            sections = self.menu_sections
+            sections = dict(filter(lambda elem: elem[0] not in self.disabled_sections, self.menu_sections.items()))
         elif self.is_in_game():
-            sections = self.game_sections
+            sections = dict(filter(lambda elem: elem[0] not in self.disabled_sections, self.game_sections.items()))
 
         sections |= self.misc_sections
         return sections.items()
@@ -183,6 +183,18 @@ class Engine(abc.ABC):
     def disable_ui_section(self, section):
         if section not in self.disabled_ui_sections:
             self.disabled_ui_sections.append(section)
+
+    def disable_all_ui_sections(self, sections_to_exclude):
+        sections_disabled = []
+        for section, _ in self.get_active_ui_sections():
+            if section not in sections_to_exclude and section not in self.disabled_ui_sections:
+                self.disable_ui_section(section) 
+                sections_disabled.append(section)
+        return sections_disabled
+
+    def enable_ui_sections(self, sections):
+        for section in sections:
+            self.enable_ui_section(section)
 
     def is_section_disabled(self, section):
         return section in self.disabled_sections
@@ -257,13 +269,14 @@ class Engine(abc.ABC):
     def open_confirmation_dialog(self, text, confirmation_action, section, enable_ui_on_confirm):
         self.misc_sections[CONFIRMATION_DIALOG].setup(text, confirmation_action, section, enable_ui_on_confirm)
         self.enable_section(CONFIRMATION_DIALOG)
-        self.disable_ui_section(section)
+        self.sections_disabled_by_dialog = self.disable_all_ui_sections([CONFIRMATION_DIALOG])
 
     def close_confirmation_dialog(self, section, enable_ui):
         self.disable_section(CONFIRMATION_DIALOG)
 
-        if enable_ui:
-            self.enable_ui_section(section)
+        self.enable_ui_sections(self.sections_disabled_by_dialog)
+        if not enable_ui:
+            self.disable_ui_section(section)
 
     def is_confirmation_dialog_open(self):
         return CONFIRMATION_DIALOG not in self.disabled_sections
@@ -271,11 +284,11 @@ class Engine(abc.ABC):
     def open_notification_dialog(self, text, section):
         self.misc_sections[NOTIFICATION_DIALOG].setup(text, section)
         self.enable_section(NOTIFICATION_DIALOG)
-        self.disable_ui_section(section)
+        self.sections_disabled_by_dialog = self.disable_all_ui_sections([NOTIFICATION_DIALOG])
 
     def close_notification_dialog(self, section):
         self.disable_section(NOTIFICATION_DIALOG)
-        self.enable_ui_section(section)
+        self.enable_ui_sections(self.sections_disabled_by_dialog)
 
     def is_ui_paused(self):
         return self.full_screen_effect.in_effect

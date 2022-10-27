@@ -10,7 +10,7 @@ class MapUI(UI):
         self.tiles = tiles
 
     def setup_location_buttons(self, locations):
-
+        self.elements.clear()
         for location in locations:
             bd = [location[1],location[2],location[3],location[4]]  # Button Dimensions
             button_tiles = self.tiles[bd[0]:bd[0] + bd[2], bd[1]:bd[1] + bd[3]]

@@ -93,7 +93,9 @@ class Game(Engine):
 
     def start_game(self):
         self.try_advance_story_segment()
+        self.close_all_main_sections()
         self.display_current_sublocation()
+        self.refresh_open_sections()
 
     def create_new_save_data(self):
         pass
@@ -132,8 +134,7 @@ class Game(Engine):
         self.game_sections[SHOP_SECTION] = ShopSection(self, 0,0, self.screen_width, self.screen_height, SHOP_SECTION)
         self.game_sections[HOME_SECTION] = HomeSection(self, 0,0, self.screen_width, self.screen_height, HOME_SECTION)
         self.game_sections[LOCATION_SECTION] = LocationSection(self, 0,0, self.screen_width, self.screen_height, LOCATION_SECTION)
-        self.game_sections[NAV_SECTION] = NavSection(self, 0,self.screen_height - 10, self.screen_width, 10, NAV_SECTION)
-        self.game_sections[INFO_SECTION] = InfoSection(self, self.screen_width - 15,0, 15, self.screen_height - 10, INFO_SECTION)
+        self.game_sections[NAV_SECTION] = NavSection(self, 0,self.screen_height - 5, self.screen_width, 5, NAV_SECTION)
         
         
         self.misc_sections = OrderedDict()
@@ -143,7 +144,7 @@ class Game(Engine):
         self.completion_sections = OrderedDict()
 
         self.disabled_sections = [CONFIRMATION_DIALOG, NOTIFICATION_DIALOG, MAP_SECTION, SHOP_SECTION, CLIENT_SECTION, HOME_SECTION, LOCATION_SECTION]
-        self.disabled_ui_sections = [CONFIRMATION_DIALOG, NOTIFICATION_DIALOG]
+        self.disabled_ui_sections = [CONFIRMATION_DIALOG, NOTIFICATION_DIALOG, MAP_SECTION, SHOP_SECTION, CLIENT_SECTION, HOME_SECTION, LOCATION_SECTION]
 
     def close_all_main_sections(self):
         self.game_sections[SHOP_SECTION].close()
@@ -157,6 +158,11 @@ class Game(Engine):
         self.disable_section(HOME_SECTION)
         self.disable_section(CLIENT_SECTION)
         self.disable_section(LOCATION_SECTION)
+
+    def refresh_open_sections(self):
+        for key, section in self.get_active_sections():
+            section.refresh()
+
 
     #*********************************************
     # Locations
@@ -221,11 +227,13 @@ class Game(Engine):
             self.display_current_location()
             self.set_full_screen_effect(self.change_location_effect, [HorizontalWipeDirection.LEFT])
             self.start_full_screen_effect()
+            self.refresh_open_sections()
 
     def change_player_sublocation(self, sublocation):
         if self.can_player_change_location(sublocation):
             self.player.sublocation = sublocation
             self.display_current_sublocation()
+            self.refresh_open_sections()
 
     def change_main_section_state(self, new_state):
         self.main_section_state = new_state
@@ -236,6 +244,9 @@ class Game(Engine):
         self.change_main_section_state(MainSectionState.MAP)
         self.game_sections[MAP_SECTION].open()
 
+    def are_currently_at_sublocation(self):
+        return self.player.sublocation != "none"
+
 
     #*********************************************
     # Books
@@ -244,8 +255,7 @@ class Game(Engine):
     def purchase_book(self, shop_name, book):
         if shop_manager[shop_name].stock.remove_book(book):
             self.player.stock.add_book(book)
-            for _, section in self.get_active_sections():
-                section.refresh()
+            self.refresh_open_sections()
 
     #*********************************************
     # Time

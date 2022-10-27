@@ -353,8 +353,8 @@ class Tooltip(UIElement):
 
     def render(self, console: Console):
         if self.visible == True:
-            console.draw_frame(x=self.render_x,y=self.render_y,width=self.render_width,height=self.render_height, decoration="╔═╗║ ║╚═╝", bg=(0,0,0))
-            console.print_box(x=self.render_x+1,y=self.render_y+1,width=self.render_width-2,height=self.render_height-2,string=self.text,alignment=tcod.CENTER, bg=(0,0,0))
+            console.draw_frame(x=self.render_x,y=self.render_y,width=self.render_width,height=self.render_height, decoration="╔═╗║ ║╚═╝", bg=(0,0,0), fg=(255,255,255))
+            console.print_box(x=self.render_x+1,y=self.render_y+1,width=self.render_width-2,height=self.render_height-2,string=self.text,alignment=tcod.CENTER, bg=(0,0,0), fg=(255,255,255))
 
 class Toggle(Button):
     def __init__(self, x: int, y: int, width: int, height: int, is_on: bool, on_action: Action, off_action: Action, tiles, on_tiles, off_tiles, response_x:int, response_y:int, normal_bg = (255,255,255), highlight_bg = (128,128,128)):

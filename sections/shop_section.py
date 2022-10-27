@@ -36,13 +36,13 @@ class ShopSection(Section):
         console.print(4,6,"Stock:")
         count = 0
         for book in self.shop.stock.values():
-            console.print(shop_screen_info["books"]["x"],shop_screen_info["books"]["y"]+ (count * shop_screen_info["books"]["gap"]),"{0}: {1}".format(book.id, book.title))
+            console.print(shop_screen_info["books"]["x"],shop_screen_info["books"]["y"]+ (count * shop_screen_info["books"]["gap"]),"{0}: {1}".format(book.id, book.title), fg=(255,255,255))
 
             button_x = shop_screen_info["books"]["x"] + shop_screen_info["books"]["button_delta"]
             console.print(button_x,shop_screen_info["books"]["y"]+ (count * shop_screen_info["books"]["gap"]),"Buy")
             count += 1
 
-        #self.ui.render(console) We are not rendering the UI, this may cause issues! This makes the current buttons work!
+        self.ui.render(console)
       
     def mousedown(self,button,x,y):
         pass

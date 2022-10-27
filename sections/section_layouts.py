@@ -1,7 +1,7 @@
 home_screen_info = {
     "advance_day_btn":{
-        "x":5,
-        "y":5,
+        "x":6,
+        "y":6,
         "width": 15,
         "height":5
     }
@@ -18,9 +18,9 @@ location_screen_info = {
 
 map_screen_info = {
     "locations":{
-        ("Client", 12, 24, 7, 1),
-        ("Bloomsbury", 28, 10, 11, 1),
-        ("Home", 36, 32, 5, 1),
+        ("Client", 13, 25, 7, 1),
+        ("Bloomsbury", 29, 11, 11, 1),
+        ("Home", 37, 31, 5, 1),
     }
 }
 
