@@ -6,13 +6,14 @@ from threading import Timer
 
 from pygame import mixer
 
-from effects.horizontal_wipe_effect import HorizontalWipeDirection, HorizontalWipeEffect
-from effects.melt_effect import MeltWipeEffect, MeltWipeEffectType
-
 from books import *
 from books import Stock
+from effects.horizontal_wipe_effect import (HorizontalWipeDirection,
+                                            HorizontalWipeEffect)
+from effects.melt_effect import MeltWipeEffect, MeltWipeEffectType
 from engine import CONFIRMATION_DIALOG, NOTIFICATION_DIALOG, Engine, GameState
 from locations import *
+from game_structure import storySegments, StoryTriggerType
 from sections.client_section import ClientSection
 from sections.confirmation import Confirmation
 from sections.home_section import HomeSection
@@ -24,7 +25,7 @@ from sections.nav_section import NavSection
 from sections.notification import Notification
 from sections.shop_section import ShopSection
 from shops import *
-from utils.definitions import TravelStatus, AdvanceDayStatus
+from utils.definitions import AdvanceDayStatus, TravelStatus, AdvanceStoryStatus, StorySegmentWaiting
 
 game_rules = {
     "LocationTravelTimeIncrement" : 1,
@@ -55,6 +56,8 @@ class PlayerState:
         self.location = "Home"
         self.sublocation = "Home"
         self.stock = Stock("PInv")
+        self.story_segment = "start"
+        self.requestsPerformed = []
 
 class TimeState:
     def __init__(self) -> None:
@@ -85,6 +88,11 @@ class Game(Engine):
 
         self.main_section_state = MainSectionState.NONE
         self.setup_effects()
+        self.start_game()
+        
+
+    def start_game(self):
+        self.try_advance_story_segment()
         self.display_current_sublocation()
 
     def create_new_save_data(self):
@@ -161,7 +169,6 @@ class Game(Engine):
         self.display_sublocation(self.player.location, self.player.sublocation)
 
     def display_location(self, location):
-        self.player.sublocation = "none"
         self.close_all_main_sections()
         self.enable_section(LOCATION_SECTION)
         self.game_sections[LOCATION_SECTION].open(location)
@@ -169,7 +176,7 @@ class Game(Engine):
         self.change_main_section_state(MainSectionState.LOCATION)
 
     def display_sublocation(self, location, sublocation):
-        if self.main_section_state == MainSectionState.SUBLOCATION:
+        if self.main_section_state == MainSectionState.SUBLOCATION and not sublocation == self.player.sublocation:
             print("WARNING! - Attempted to change to a sublocation from another sublocation!")
             return
 
@@ -180,11 +187,13 @@ class Game(Engine):
 
         if sublocation.type == LocationType.CLIENT:
             self.enable_section(CLIENT_SECTION) 
+            self.game_sections[CLIENT_SECTION].open()
         elif sublocation.type == LocationType.SHOP:
             self.enable_section(SHOP_SECTION)
             self.game_sections[SHOP_SECTION].open(sublocation)
         elif sublocation.type == LocationType.HOME:
             self.enable_section(HOME_SECTION)
+            self.game_sections[HOME_SECTION].open()
 
         self.change_main_section_state(MainSectionState.SUBLOCATION)
 
@@ -206,6 +215,7 @@ class Game(Engine):
 
     def change_player_location(self, location):
         if self.can_player_change_location(location):
+            self.player.sublocation = "none"
             self.time.increment_time(game_rules["LocationTravelTimeIncrement"])
             self.player.location = location
             self.display_current_location()
@@ -251,6 +261,47 @@ class Game(Engine):
             return AdvanceDayStatus.TOO_EARLY
         else:
             return AdvanceDayStatus.FINE
+
+    #*********************************************
+    # Story
+    #*********************************************
+    
+    def try_advance_story_segment(self):
+        if self.should_display_next_story_segment() == AdvanceStoryStatus.FINE:
+            segment = storySegments[storySegments[self.player.story_segment]["nextSegment"]]
+            self.player.story_segment = segment["title"]
+            if segment["location"] == LocationType.HOME:
+                self.story_segment_waiting = StorySegmentWaiting.HOME
+            elif segment["location"] == LocationType.CLIENT:
+                self.story_segment_waiting = StorySegmentWaiting.CLIENT
+            elif segment["location"] == LocationType.HOME:
+                self.story_segment_waiting = StorySegmentWaiting.SHOP
+        else:
+            self.story_segment_waiting = StorySegmentWaiting.NONE
+
+    def should_display_next_story_segment(self):
+        next_segment = storySegments[self.player.story_segment]["nextSegment"]
+        if next_segment != None:
+            if storySegments[next_segment]["trigger"] == StoryTriggerType.NONE:
+                return AdvanceStoryStatus.FINE
+            elif storySegments[next_segment]["trigger"] == StoryTriggerType.REQUEST_NEEDED:
+                if storySegments[next_segment]["requestsNeeded"] == None:
+                    print("WARNING! - A segment is set as StoryTriggerType.REQUEST_NEEDED but has no required requests.")
+                    return AdvanceStoryStatus.REQUEST_NOT_COMPLETED
+
+                if all(r in self.player.requestsPerformed for r in storySegments[next_segment]["requestsNeeded"]):
+                    return AdvanceStoryStatus.FINE
+                else:
+                    return AdvanceStoryStatus.REQUEST_NOT_COMPLETED
+
+    def get_current_story_segment(self):
+        return storySegments[self.player.story_segment]
+
+    def get_story_segment_waiting(self):
+        return self.story_segment_waiting
+
+    def clear_story_segment_waiting(self):
+        self.story_segment_waiting = StorySegmentWaiting.NONE
         
 
         

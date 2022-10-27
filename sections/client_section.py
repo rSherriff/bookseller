@@ -28,7 +28,7 @@ class ClientSection(Section):
         self.animation_tick_interval = 0.3
         self.animation_tick = 0
         
-        self.text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+        self.text = "Old text!?!?!?!?"
         self.dialog_tick_interval = 0.1
         self.character_currently_talking = False
         self.current_dialog_index = 0
@@ -42,6 +42,9 @@ class ClientSection(Section):
 
         self.dialog_tick_loop()
         self.animation_tick_loop()
+
+    def open(self):
+        pass
 
     def update(self):
         super().update()
