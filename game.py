@@ -12,8 +12,8 @@ from effects.horizontal_wipe_effect import (HorizontalWipeDirection,
                                             HorizontalWipeEffect)
 from effects.melt_effect import MeltWipeEffect, MeltWipeEffectType
 from engine import CONFIRMATION_DIALOG, NOTIFICATION_DIALOG, Engine, GameState
+from game_structure import StoryTriggerType, storySegments
 from locations import *
-from game_structure import storySegments, StoryTriggerType
 from sections.client_section import ClientSection
 from sections.confirmation import Confirmation
 from sections.home_section import HomeSection
@@ -25,7 +25,9 @@ from sections.nav_section import NavSection
 from sections.notification import Notification
 from sections.shop_section import ShopSection
 from shops import *
-from utils.definitions import AdvanceDayStatus, TravelStatus, AdvanceStoryStatus, StorySegmentWaiting
+from utils.definitions import (AdvanceDayStatus, AdvanceStoryStatus,
+                               StorySegmentWaiting, TravelStatus)
+from utils.print_formatting import format_red_background
 
 game_rules = {
     "LocationTravelTimeIncrement" : 1,
@@ -89,7 +91,6 @@ class Game(Engine):
         self.main_section_state = MainSectionState.NONE
         self.setup_effects()
         self.start_game()
-        
 
     def start_game(self):
         self.try_advance_story_segment()
@@ -183,7 +184,7 @@ class Game(Engine):
 
     def display_sublocation(self, location, sublocation):
         if self.main_section_state == MainSectionState.SUBLOCATION and not sublocation == self.player.sublocation:
-            print("WARNING! - Attempted to change to a sublocation from another sublocation!")
+            print("{0} - Attempted to change to a sublocation from another sublocation!".format(format_red_background("WARNING")))
             return
 
         print(("Changing to sublocation {0}").format(sublocation))
@@ -296,7 +297,7 @@ class Game(Engine):
                 return AdvanceStoryStatus.FINE
             elif storySegments[next_segment]["trigger"] == StoryTriggerType.REQUEST_NEEDED:
                 if storySegments[next_segment]["requestsNeeded"] == None:
-                    print("WARNING! - A segment is set as StoryTriggerType.REQUEST_NEEDED but has no required requests.")
+                    print("{0} - A segment is set as StoryTriggerType.REQUEST_NEEDED but has no required requests.".format(format_red_background("WARNING")))
                     return AdvanceStoryStatus.REQUEST_NOT_COMPLETED
 
                 if all(r in self.player.requestsPerformed for r in storySegments[next_segment]["requestsNeeded"]):
