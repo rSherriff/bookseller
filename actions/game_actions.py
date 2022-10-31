@@ -67,6 +67,20 @@ class PurchaseBook(Action):
     def perform(self):
         self.engine.purchase_book(self.shop_name, self.book)
 
+#*********************************************
+# Requests
+#*********************************************
+
+class PresentRequestSolutionAction(Action):
+    def __init__(self, engine, request_id, solution_id, client_id):
+        super().__init__(engine)
+        self.request_id = request_id
+        self.solution_id = solution_id
+        self.client_id = client_id
+
+    def perform(self):
+        self.engine.present_request_solution(self.request_id, self.solution_id, self.client_id)
+
 
 #*********************************************
 # Time

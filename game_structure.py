@@ -1,39 +1,40 @@
 
 from enum import Enum, auto
 from locations import LocationType
+from utils.definitions import StoryTriggerType, ClientIDs
 
-class StoryTriggerType(Enum):
-    NONE = auto()
-    REQUEST_NEEDED = auto()
+client_status = {
+    ClientIDs.CLIENT_A: []
+}
 
-
-storySegments = {
+story_segments = {
     "start":{
         "nextSegment" : "seg1"
     },
     "seg1":{
         "title" : "seg1",
-        "requests_unlocked": [1],
+        "requests_unlocked": {ClientIDs.CLIENT_A:["testReq"]},
         "location": LocationType.HOME,
         "trigger": StoryTriggerType.NONE,
-        "text": "Here is a story segment!",
+        "text": "Travel to the client!",
         "nextSegment" : "seg2"
     },
     "seg2":{
         "title" : "seg2",
+        "requestsNeeded": ["testReq"],
         "location": LocationType.HOME,
-        "trigger": StoryTriggerType.NONE,
-        "text": "Here is a second story segment!",
+        "trigger": StoryTriggerType.REQUEST_NEEDED,
+        "text": "You got the book and returned home!",
         "nextSegment" : None
     }
 }
 
 requests = {
-    "1":{
-        "text":[
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-            ],
-        "book":1
+    "testReq":{
+        "id":"testReq",
+        "text":
+            "Get me a copy of 'I Am Error'",
+        "solution":"1"
     }
 }
 

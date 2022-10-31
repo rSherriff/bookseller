@@ -34,10 +34,13 @@ class Stock:
     def values(self):
         return self.stock.values()
 
+    def items(self):
+        return self.stock.items()
+
 
 
 book_manager = {
-        "1": Book("1","testBook", "Here is a test book, it eventually will have lots of descriptive information!"),
+        "1": Book("1","I am Error", "Here is the book you need to satisfy the request!"),
         "2": Book("2","testBook", "Here is a test book, it eventually will have lots of descriptive information!"),
         "3": Book("3","testBook", "Here is a test book, it eventually will have lots of descriptive information!"),
         "4": Book("4","testBook", "Here is a test book, it eventually will have lots of descriptive information!"),

@@ -6,13 +6,16 @@ from threading import Timer
 
 from pygame import mixer
 
+from actions.actions import OpenNotificationDialog
 from books import *
 from books import Stock
+from clients import client_manager
 from effects.horizontal_wipe_effect import (HorizontalWipeDirection,
                                             HorizontalWipeEffect)
 from effects.melt_effect import MeltWipeEffect, MeltWipeEffectType
 from engine import CONFIRMATION_DIALOG, NOTIFICATION_DIALOG, Engine, GameState
-from game_structure import StoryTriggerType, storySegments
+from game_structure import (StoryTriggerType, client_status, requests,
+                            story_segments)
 from locations import *
 from sections.client_section import ClientSection
 from sections.confirmation import Confirmation
@@ -23,11 +26,13 @@ from sections.location_section import LocationSection
 from sections.map_section import MapSection
 from sections.nav_section import NavSection
 from sections.notification import Notification
+from sections.presentation_section import PresentationSection
 from sections.shop_section import ShopSection
 from shops import *
 from utils.definitions import (AdvanceDayStatus, AdvanceStoryStatus,
                                StorySegmentWaiting, TravelStatus)
-from utils.print_formatting import format_red_background
+from utils.print_formatting import (format_green_background,
+                                    format_red_background)
 
 game_rules = {
     "LocationTravelTimeIncrement" : 1,
@@ -43,6 +48,7 @@ CLIENT_SECTION = "clientSection"
 SHOP_SECTION = "shopSection"
 HOME_SECTION = "homeSection"
 LOCATION_SECTION = "locationSection"
+PRESENTATION_SECTION = "presentationSection"
 NAV_SECTION = "navSection"
 INFO_SECTION = "infoSection"
 
@@ -59,7 +65,7 @@ class PlayerState:
         self.sublocation = "Home"
         self.stock = Stock("PInv")
         self.story_segment = "start"
-        self.requestsPerformed = []
+        self.requests_performed = []
 
 class TimeState:
     def __init__(self) -> None:
@@ -135,6 +141,7 @@ class Game(Engine):
         self.game_sections[SHOP_SECTION] = ShopSection(self, 0,0, self.screen_width, self.screen_height, SHOP_SECTION)
         self.game_sections[HOME_SECTION] = HomeSection(self, 0,0, self.screen_width, self.screen_height, HOME_SECTION)
         self.game_sections[LOCATION_SECTION] = LocationSection(self, 0,0, self.screen_width, self.screen_height, LOCATION_SECTION)
+        self.game_sections[PRESENTATION_SECTION] = PresentationSection(self, int(self.screen_width * 0.25), int(self.screen_height * 0.25), int(self.screen_width * 0.5), int(self.screen_height * 0.5), PRESENTATION_SECTION)
         self.game_sections[NAV_SECTION] = NavSection(self, 0,self.screen_height - 5, self.screen_width, 5, NAV_SECTION)
         
         
@@ -144,8 +151,8 @@ class Game(Engine):
 
         self.completion_sections = OrderedDict()
 
-        self.disabled_sections = [CONFIRMATION_DIALOG, NOTIFICATION_DIALOG, MAP_SECTION, SHOP_SECTION, CLIENT_SECTION, HOME_SECTION, LOCATION_SECTION]
-        self.disabled_ui_sections = [CONFIRMATION_DIALOG, NOTIFICATION_DIALOG, MAP_SECTION, SHOP_SECTION, CLIENT_SECTION, HOME_SECTION, LOCATION_SECTION]
+        self.disabled_sections = [CONFIRMATION_DIALOG, NOTIFICATION_DIALOG, MAP_SECTION, SHOP_SECTION, CLIENT_SECTION, HOME_SECTION, LOCATION_SECTION, PRESENTATION_SECTION]
+        self.disabled_ui_sections = [CONFIRMATION_DIALOG, NOTIFICATION_DIALOG, MAP_SECTION, SHOP_SECTION, CLIENT_SECTION, HOME_SECTION, LOCATION_SECTION, PRESENTATION_SECTION]
 
     def close_all_main_sections(self):
         self.game_sections[SHOP_SECTION].close()
@@ -194,7 +201,7 @@ class Game(Engine):
 
         if sublocation.type == LocationType.CLIENT:
             self.enable_section(CLIENT_SECTION) 
-            self.game_sections[CLIENT_SECTION].open()
+            self.game_sections[CLIENT_SECTION].open(sublocation.client_id)
         elif sublocation.type == LocationType.SHOP:
             self.enable_section(SHOP_SECTION)
             self.game_sections[SHOP_SECTION].open(sublocation)
@@ -228,12 +235,14 @@ class Game(Engine):
             self.display_current_location()
             self.set_full_screen_effect(self.change_location_effect, [HorizontalWipeDirection.LEFT])
             self.start_full_screen_effect()
+            self.try_advance_story_segment()
             self.refresh_open_sections()
 
     def change_player_sublocation(self, sublocation):
         if self.can_player_change_location(sublocation):
             self.player.sublocation = sublocation
             self.display_current_sublocation()
+            self.try_advance_story_segment()
             self.refresh_open_sections()
 
     def change_main_section_state(self, new_state):
@@ -279,7 +288,9 @@ class Game(Engine):
     
     def try_advance_story_segment(self):
         if self.should_display_next_story_segment() == AdvanceStoryStatus.FINE:
-            segment = storySegments[storySegments[self.player.story_segment]["nextSegment"]]
+            segment = story_segments[story_segments[self.player.story_segment]["nextSegment"]]
+            print("Advancing story to {0}".format(segment["title"]))
+
             self.player.story_segment = segment["title"]
             if segment["location"] == LocationType.HOME:
                 self.story_segment_waiting = StorySegmentWaiting.HOME
@@ -287,32 +298,81 @@ class Game(Engine):
                 self.story_segment_waiting = StorySegmentWaiting.CLIENT
             elif segment["location"] == LocationType.HOME:
                 self.story_segment_waiting = StorySegmentWaiting.SHOP
-        else:
-            self.story_segment_waiting = StorySegmentWaiting.NONE
 
     def should_display_next_story_segment(self):
-        next_segment = storySegments[self.player.story_segment]["nextSegment"]
+        next_segment = story_segments[self.player.story_segment]["nextSegment"]
         if next_segment != None:
-            if storySegments[next_segment]["trigger"] == StoryTriggerType.NONE:
+            if story_segments[next_segment]["trigger"] == StoryTriggerType.NONE:
                 return AdvanceStoryStatus.FINE
-            elif storySegments[next_segment]["trigger"] == StoryTriggerType.REQUEST_NEEDED:
-                if storySegments[next_segment]["requestsNeeded"] == None:
+            elif story_segments[next_segment]["trigger"] == StoryTriggerType.REQUEST_NEEDED:
+                if story_segments[next_segment]["requestsNeeded"] == None:
                     print("{0} - A segment is set as StoryTriggerType.REQUEST_NEEDED but has no required requests.".format(format_red_background("WARNING")))
                     return AdvanceStoryStatus.REQUEST_NOT_COMPLETED
 
-                if all(r in self.player.requestsPerformed for r in storySegments[next_segment]["requestsNeeded"]):
+                if all(r in self.player.requests_performed for r in story_segments[next_segment]["requestsNeeded"]):
                     return AdvanceStoryStatus.FINE
                 else:
                     return AdvanceStoryStatus.REQUEST_NOT_COMPLETED
+        else:
+            print("{0} - Reached the end of story segments".format(format_red_background("WARNING")))
+            return AdvanceStoryStatus.AT_END
 
     def get_current_story_segment(self):
-        return storySegments[self.player.story_segment]
+        return story_segments[self.player.story_segment]
 
     def get_story_segment_waiting(self):
         return self.story_segment_waiting
 
     def clear_story_segment_waiting(self):
         self.story_segment_waiting = StorySegmentWaiting.NONE
+
+    def show_current_story_segment(self):
+        segment = self.get_current_story_segment()
+        OpenNotificationDialog(self, segment["text"], self).perform()
+        if "requests_unlocked" in segment:
+            self.unlock_requests(segment["requests_unlocked"])
+        self.clear_story_segment_waiting()
+
+    #*********************************************
+    # Requests
+    #*********************************************
+
+    def unlock_requests(self, requests_to_unlock):
+        for client_id, requests in requests_to_unlock.items():
+            client_manager[client_id].available_requests += requests
+
+    def complete_request(self, request_id, client_id):
+        print("Completed request {0}".format(request_id))
+        client_manager[client_id].complete_request(request_id)
+        self.player.requests_performed.append(request_id)
+        self.try_advance_story_segment()
+        self.game_sections[CLIENT_SECTION].request_satisfied()
+        self.refresh_open_sections()
+
+    def fail_request(self, request_id, client_id):
+        self.game_sections[CLIENT_SECTION].request_failed()
+        self.refresh_open_sections()
+
+    def present_request_solution(self, request_id, solution_id, client_id):
+        request = requests[request_id]
+        if request["solution"] == solution_id:
+            print("Presenting {0} for request {1} - {2}".format(solution_id, request_id, format_green_background("CORRECT!")))
+            self.complete_request(request_id, client_id)
+        else:
+            print("Presenting {0} for request {1} - {2}".format(solution_id, request_id, format_red_background("INCORRECT!")))
+            self.fail_request(request_id, client_id)
+
+    def open_presentation_dialog(self, request_id, client_id):
+        self.game_sections[PRESENTATION_SECTION].open(request_id, client_id)
+        self.enable_section(PRESENTATION_SECTION)
+        self.sections_disabled_by_dialog = self.disable_all_ui_sections([PRESENTATION_SECTION])
+
+    def close_presentation_dialog(self):
+        self.disable_section(PRESENTATION_SECTION)
+        self.enable_ui_sections(self.sections_disabled_by_dialog)
+
+
+
         
 
         

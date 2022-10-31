@@ -1,7 +1,6 @@
 import string
 
 import tcod
-from actions.actions import OpenNotificationDialog
 from ui.home_ui import HomeUI
 from utils.definitions import StorySegmentWaiting
 
@@ -19,12 +18,8 @@ class HomeSection(Section):
 
     def refresh(self):
         if self.engine.get_story_segment_waiting() == StorySegmentWaiting.HOME:
-            segment = self.engine.get_current_story_segment()
-
-            OpenNotificationDialog(self.engine, segment["text"], self).perform()
-            self.engine.clear_story_segment_waiting()
+            self.engine.show_current_story_segment()
             
-
     def update(self):
         super().update()
     

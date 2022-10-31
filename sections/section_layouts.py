@@ -52,8 +52,8 @@ client_screen_info = {
 }
 
 client_character_info = {
-    "x":2,
-    "y":2,
+    "x":3,
+    "y":3,
     "width":11,
     "height":14,
     "sprites":{

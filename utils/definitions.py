@@ -11,10 +11,18 @@ class AdvanceDayStatus(Enum):
 
 class AdvanceStoryStatus(Enum):
     FINE = auto()
-    REQUEST_NOT_COMPLETED = auto()
+    REQUEST_NOT_COMPLETED = auto(),
+    AT_END = auto()
 
 class StorySegmentWaiting(Enum):
     NONE = auto(),
     HOME = auto(),
     SHOP = auto(),
     CLIENT = auto()
+
+class StoryTriggerType(Enum):
+    NONE = auto()
+    REQUEST_NEEDED = auto()
+
+class ClientIDs(Enum):
+    CLIENT_A = auto()
