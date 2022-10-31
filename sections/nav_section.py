@@ -41,6 +41,8 @@ class NavSection(Section):
         console.print(self.x+nav_section_info["date"]["x"],self.y+nav_section_info["date"]["y"], self.engine.time.get_date_string(), fg=(255,255,255))
         console.print(self.x+nav_section_info["time"]["x"],self.y+nav_section_info["time"]["y"], self.engine.time.get_hour_string(), fg=(255,255,255))
         console.print(self.x+nav_section_info["location"]["x"],self.y+nav_section_info["location"]["y"], self.engine.player.location, fg=(255,255,255))
+
+        self.ui.render(console)
        
       
     def mousedown(self,button,x,y):
