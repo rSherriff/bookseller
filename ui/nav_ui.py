@@ -15,8 +15,7 @@ class NavUI(UI):
 
         bd = [1, 0, 12, 4] 
         if self.section.engine.are_currently_at_sublocation():
-            button_tiles = self.tiles[bd[0]:bd[0] + bd[2], bd[1]:bd[1] + bd[3]]
-            left_button = Button(x=bd[0], y=bd[1], width=bd[2],height=bd[3], click_action=DisplayCurrentSublocationAction(self.section.engine), tiles=button_tiles)
+            left_button = Button(x=bd[0], y=bd[1], width=bd[2],height=bd[3], click_action=DisplayCurrentSublocationAction(self.section.engine))
             self.add_element(left_button)
         else:
             tooltip_text = "You are not currently at a location!"
@@ -24,13 +23,11 @@ class NavUI(UI):
             self.add_element(t)
 
         bd = [13, 0, 8, 4]
-        button_tiles = self.tiles[bd[0]:bd[0] + bd[2], bd[1]:bd[1] + bd[3]]
-        left_button = Button(x=bd[0], y=bd[1], width=bd[2],height=bd[3], click_action=DisplayCurrentLocationAction(self.section.engine), tiles=button_tiles)
+        left_button = Button(x=bd[0], y=bd[1], width=bd[2],height=bd[3], click_action=DisplayCurrentLocationAction(self.section.engine))
         self.add_element(left_button)
 
         bd = [21, 0, 8, 4]
-        button_tiles = self.tiles[bd[0]:bd[0] + bd[2], bd[1]:bd[1] + bd[3]]
-        left_button = Button(x=bd[0], y=bd[1], width=bd[2],height=bd[3], click_action=DisplayMapAction(self.section.engine), tiles=button_tiles)
+        left_button = Button(x=bd[0], y=bd[1], width=bd[2],height=bd[3], click_action=DisplayMapAction(self.section.engine))
         self.add_element(left_button)
 
 

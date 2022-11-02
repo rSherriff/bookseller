@@ -13,7 +13,6 @@ class HomeUI(UI):
         width = home_screen_info["advance_day_btn"]["width"]
         height = home_screen_info["advance_day_btn"]["height"]
 
-        button_tiles = self.tiles[x:x+width,y:y+height]
         b = Button(x=x, y=y, width=width, height=height, click_action=OpenAdvanceDayConfirmationAction(
-        self.section.engine, "Advance the day?", AdvanceDayAction(self.section.engine), self.section.name, enable_ui_on_confirm=True), tiles=button_tiles)
+        self.section.engine, "Advance the day?", AdvanceDayAction(self.section.engine), self.section.name, enable_ui_on_confirm=True))
         self.add_element(b)

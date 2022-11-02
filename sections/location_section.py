@@ -30,7 +30,6 @@ class LocationSection(Section):
     
     def render(self, console):
         super().render(console)
-        console.print(1,1,self.location.name,fg=(255,255,255))
 
         count = 0
         for location in self.location.sublocations.values():
@@ -40,7 +39,7 @@ class LocationSection(Section):
             console.print(button_x,location_screen_info["locations"]["y"]+ (count * location_screen_info["locations"]["gap"]),"Go")
             count += 1
 
-        #self.ui.render(console) We are not rendering the UI, this may cause issues! This makes the current buttons work!
+        self.render_ui(console)
       
     def mousedown(self,button,x,y):
         pass

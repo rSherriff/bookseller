@@ -79,12 +79,13 @@ class Section:
             if self.invisible == False:
                 console.tiles_rgb[self.x : self.x + self.width, self.y: self.y + self.height] = self.tiles["graphic"]
 
-            if self.ui is not None:
-                self.ui.render(console)
-
             for entity in self.entities:
                 if not entity.invisible:
                     console.print(entity.x, entity.y,entity.char, fg=entity.fg_color, bg=entity.bg_color)
+
+    def render_ui(self, console):
+        if not self.ui is None:
+            self.ui.render(console)
 
     def update(self):
         for entity in self.entities:

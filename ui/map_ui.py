@@ -13,7 +13,6 @@ class MapUI(UI):
         self.elements.clear()
         for location in locations:
             bd = [location[1],location[2],location[3],location[4]]  # Button Dimensions
-            button_tiles = self.tiles[bd[0]:bd[0] + bd[2], bd[1]:bd[1] + bd[3]]
             left_button = Button(x=bd[0], y=bd[1], width=bd[2],height=bd[3], click_action=OpenChangePlayerLocationConfirmationAction(
-                self.section.engine, "Travel to {0}?".format(location[0]), location[0],ChangePlayerLocationAction(self.section.engine, location[0]), self.section.name, enable_ui_on_confirm=False), tiles=button_tiles)
+                self.section.engine, "Travel to {0}?".format(location[0]), location[0],ChangePlayerLocationAction(self.section.engine, location[0]), self.section.name, enable_ui_on_confirm=False))
             self.add_element(left_button)        

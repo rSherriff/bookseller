@@ -1,6 +1,6 @@
 import string
 
-import tcod
+from tcod import Console
 from ui.home_ui import HomeUI
 from utils.definitions import StorySegmentWaiting
 
@@ -25,6 +25,7 @@ class HomeSection(Section):
     
     def render(self, console):
         super().render(console)
+        self.render_ui(console)
               
     def mousedown(self,button,x,y):
         pass

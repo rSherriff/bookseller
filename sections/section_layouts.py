@@ -78,7 +78,14 @@ shop_screen_info = {
     }
 }
 
-dialog_info = {
+confirmation_dialog_info = {
     "max_width" : 40,
-    "button_width" : 7
+    "button_width" : 7,
+    "button_height": 5
+}
+
+notification_dialog_info = {
+    "max_width" : 40,
+    "button_width" : 9,
+    "button_height": 5
 }

@@ -42,7 +42,7 @@ class ShopSection(Section):
             console.print(button_x,shop_screen_info["books"]["y"]+ (count * shop_screen_info["books"]["gap"]),"Buy")
             count += 1
 
-        self.ui.render(console)
+        self.render_ui(console)
       
     def mousedown(self,button,x,y):
         pass

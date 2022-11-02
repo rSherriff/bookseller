@@ -131,34 +131,27 @@ class UIElement:
 
 
 class Button(UIElement):
-    def __init__(self, x: int, y: int, width: int, height: int, click_action: Action, tiles, normal_bg = (255,255,255), highlight_bg = (128,128,128)):
+    def __init__(self, x: int, y: int, width: int, height: int, click_action: Action, normal_fg =  (255,255,255), highlight_fg = (128,128,128)):
         super().__init__(x,y,width,height)
         self.click_action = click_action
-        self.tiles = tiles
 
         self.hover_action = None
 
-        self.normal_bg= normal_bg
-        self.highlight_bg = highlight_bg
+        self.normal_fg = (255,255,255)
+        self.highlight_fg = (128,128,128)
 
 
     def render(self, console: Console):
-        if self.tiles is None:
-            return
-
-        temp_console = Console(width=self.width, height=self.height, order="F")
-
+        tiles = console.tiles_rgb
         for h in range(0,self.height):
             for w in range(0, self.width):
-                if self.tiles[w,h][0] != 9488:
-                    if self.mouseover:
-                        self.tiles[w,h][1] = self.highlight_bg
-                    else:
-                        self.tiles[w,h][1] = self.normal_bg 
+                x = self.x + w
+                y = self.y + h
+                if self.mouseover:
+                    tiles[x,y][1] = self.highlight_fg
+                else:
+                    tiles[x,y][1] = self.normal_fg
                         
-                temp_console.tiles_rgb[w,h] = self.tiles[w,h]
-
-        temp_console.blit(console, self.x, self.y)
 
     def on_mousedown(self, x: int, y: int):
         if self.click_action is not None:
