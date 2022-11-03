@@ -131,15 +131,18 @@ class UIElement:
 
 
 class Button(UIElement):
-    def __init__(self, x: int, y: int, width: int, height: int, click_action: Action, normal_fg =  (255,255,255), highlight_fg = (128,128,128)):
+    def __init__(self, x: int, y: int, width: int, height: int, click_action: Action, n_fg =  (255,255,255), h_fg = (128,128,128)):
         super().__init__(x,y,width,height)
         self.click_action = click_action
 
         self.hover_action = None
 
-        self.normal_fg = (255,255,255)
-        self.highlight_fg = (128,128,128)
+        self.normal_fg = n_fg
+        self.highlight_fg = h_fg
+        self.mask = None
 
+    def set_mask(self, mask):
+        self.mask = mask
 
     def render(self, console: Console):
         tiles = console.tiles_rgb
@@ -147,10 +150,13 @@ class Button(UIElement):
             for w in range(0, self.width):
                 x = self.x + w
                 y = self.y + h
-                if self.mouseover:
-                    tiles[x,y][1] = self.highlight_fg
+                if self.mask is not None and self.mask[h][w] == True:
+                    if self.mouseover:
+                        tiles[x,y][1] = (255,255,255)
+                        tiles[x,y][2] = self.highlight_fg
                 else:
-                    tiles[x,y][1] = self.normal_fg
+                    if self.mouseover:
+                        tiles[x,y][1] = self.highlight_fg
                         
 
     def on_mousedown(self, x: int, y: int):
