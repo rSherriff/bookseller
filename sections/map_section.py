@@ -28,7 +28,7 @@ class MapSection(Section):
         super().render(console)
 
         for location in map_screen_info["locations"]:
-            console.print(location[1], location[2], "-"+location[0],fg=(255,255,255))
+            console.print(location[1], location[2], chr(229)+location[0].upper(),fg=(255,255,255))
 
         self.ui.render(console)
     

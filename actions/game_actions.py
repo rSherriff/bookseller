@@ -1,6 +1,7 @@
 from utils.definitions import TravelStatus, AdvanceDayStatus
 
-from actions.actions import Action
+from actions.actions import Action, OpenConfirmationDialog, OpenNotificationDialog
+from locations import location_manager
 
 
 #*********************************************
@@ -49,9 +50,25 @@ class OpenChangePlayerLocationConfirmationAction(Action):
         if travelStatus == TravelStatus.FINE:
             return self.engine.open_confirmation_dialog(self.text, self.confirmation_action, self.section, self.enable_ui_on_confirm)
         elif travelStatus == TravelStatus.ALREADY_PRESENT:
-            return self.engine.open_notification_dialog("You are already at this location!", self.section)
+            return self.engine.open_notification_dialog("You are already in this area!", self.section)
         elif travelStatus == TravelStatus.DAY_OVER:
             return self.engine.open_notification_dialog("It's getting late, you should return home.", self.section)
+
+class SearchLocationAction(Action):
+    def __init__(self, engine, section, location_name) -> None:
+        super().__init__(engine)
+        self.section = section
+        self.location_name = location_name
+
+    def perform(self, search_term) -> None:
+        location = location_manager[self.location_name]
+        sublocation_matches= location.search_sub_locations(search_term)
+        if len(sublocation_matches) > 0:
+            sublocation_name = sublocation_matches[0]
+            OpenConfirmationDialog(self.engine, "Location Found!\nTravel to {0}?".format(sublocation_name), ChangePlayerSublocationAction(self.section.engine, sublocation_name), self.section.name, enable_ui_on_confirm=False).perform()
+        else:
+            OpenNotificationDialog(self.engine, "Location not found!", self.section).perform()
+
 
 
 #*********************************************

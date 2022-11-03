@@ -1,7 +1,7 @@
 from actions.actions import OpenConfirmationDialog
-from actions.game_actions import ChangePlayerSublocationAction
+from actions.game_actions import ChangePlayerSublocationAction, SearchLocationAction
 
-from ui.ui import UI, Tooltip, Button
+from ui.ui import UI, Tooltip, Button, Input
 from books import book_manager
 
 
@@ -18,3 +18,7 @@ class LocationUI(UI):
             self.section.engine, "Travel to {0}?".format(sublocation_name), ChangePlayerSublocationAction(self.section.engine, sublocation_name), self.section.name, enable_ui_on_confirm=False))
             self.add_element(b)
             count += 1
+
+    def setup_search_bar(self, location_name):
+        search_bar = Input(7,27,20,1, SearchLocationAction(self.section.engine,self.section, location_name))
+        self.add_element(search_bar)

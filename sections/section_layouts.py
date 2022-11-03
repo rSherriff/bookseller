@@ -51,23 +51,23 @@ client_misc_tiles_info = {
 client_screen_info = {
     "text":
     {
-        "x":18,
-        "y":4,
+        "x":20,
+        "y":6,
         "width":30,
         "height":10
     },
     "speech_mark":
     {
-        "x":14,
-        "y":4,
+        "x":16,
+        "y":6,
         "width":3,
         "height":3
     }
 }
 
 client_character_info = {
-    "x":3,
-    "y":3,
+    "x":5,
+    "y":5,
     "width":11,
     "height":14,
     "sprites":{

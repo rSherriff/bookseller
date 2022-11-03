@@ -21,6 +21,7 @@ class LocationSection(Section):
        
         button_x = location_screen_info["locations"]["x"] + location_screen_info["locations"]["button_delta"]
         self.ui.setup_sublocation_buttons(button_x,location_screen_info["locations"]["y"],location_screen_info["locations"]["gap"],self.location.sublocations.keys())
+        self.ui.setup_search_bar(self.location.name)
 
     def close(self):
         self.ui.clear()
@@ -33,10 +34,11 @@ class LocationSection(Section):
 
         count = 0
         for location in self.location.sublocations.values():
-            console.print(location_screen_info["locations"]["x"],location_screen_info["locations"]["y"]+ (count * location_screen_info["locations"]["gap"]),"{0}".format(location.name), fg=(255,255,255))
+            if not location.hidden:
+                console.print(location_screen_info["locations"]["x"],location_screen_info["locations"]["y"]+ (count * location_screen_info["locations"]["gap"]),"{0}".format(location.name), fg=(255,255,255))
 
-            button_x = location_screen_info["locations"]["x"] + location_screen_info["locations"]["button_delta"]
-            console.print(button_x,location_screen_info["locations"]["y"]+ (count * location_screen_info["locations"]["gap"]),"Go")
+                button_x = location_screen_info["locations"]["x"] + location_screen_info["locations"]["button_delta"]
+                console.print(button_x,location_screen_info["locations"]["y"]+ (count * location_screen_info["locations"]["gap"]),"Go")
             count += 1
 
         self.render_ui(console)

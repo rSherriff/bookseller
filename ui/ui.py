@@ -199,13 +199,14 @@ class ShapedButton(Button):
         return False
             
 class Input(UIElement):
-    def __init__(self, x: int, y: int, width: int, height: int):
+    def __init__(self, x: int, y: int, width: int, height: int, action = None):
         super().__init__(x,y,width,height)
         self.selected = False
         self.text = ''
         self.blink_interval = 0.7
         self.bg_color = (0,0,0)
         self.fg_color = (255,255,255)
+        self.return_action = action
 
     def render(self, console: Console):
         temp_console = Console(width=self.width, height=self.height)
@@ -217,7 +218,7 @@ class Input(UIElement):
 
         if self.selected == True:
             if self.blink == True:
-                temp_console.tiles_rgb[0,len(self.text)] = (9488, self.fg_color , self.bg_color)
+                temp_console.tiles_rgb[0,len(self.text)] = (ord('_'), self.fg_color , self.bg_color)
 
         temp_console.blit(console, self.x, self.y)
 
@@ -243,11 +244,18 @@ class Input(UIElement):
 
             if key == tcod.event.K_BACKSPACE:
                 self.text = self.text[:-1]
-            elif key == tcod.event.K_RETURN or key == tcod.event.K_ESCAPE:
+            elif key == tcod.event.K_ESCAPE:
                 self.selected = False
                 self.blink = False
+                self.text =  ""
             elif key == tcod.event.K_SPACE and len(self.text) < self.width - 1:
                 self.text += ' '
+            elif key == tcod.event.K_RETURN or key ==tcod.event.K_RETURN2:
+                if not self.return_action == None:
+                    self.return_action.perform(self.text)
+                self.selected = False
+                self.blink = False
+                self.text =  ""
             elif len(self.text) < self.width - 1 and tcod.event.K_a <= key <= tcod.event.K_z:
                 letter = get_letter_key(key)
                 if keyboard.is_pressed('shift'):

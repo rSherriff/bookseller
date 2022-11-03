@@ -17,6 +17,9 @@ skoob.stock.add_book(book_manager["4"])
 skoob.stock.add_book(book_manager["5"])
 skoob.stock.add_book(book_manager["6"])
 
+hs = Shop("hidden_shop")
+
 shop_manager = {
-    skoob.name: skoob
+    skoob.name: skoob,
+    hs.name : hs
 }
