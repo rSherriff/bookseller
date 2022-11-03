@@ -26,3 +26,6 @@ class StoryTriggerType(Enum):
 
 class ClientIDs(Enum):
     CLIENT_A = auto()
+
+class PeopleIDs(Enum):
+    PERSON_A = auto()

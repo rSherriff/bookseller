@@ -1,7 +1,7 @@
 
 from enum import Enum, auto
 from locations import LocationType
-from utils.definitions import StoryTriggerType, ClientIDs
+from utils.definitions import StoryTriggerType, ClientIDs, PeopleIDs
 
 client_status = {
     ClientIDs.CLIENT_A: []
@@ -35,6 +35,15 @@ requests = {
         "text":
             "Get me a copy of 'I Am Error'",
         "solution":"1"
+    }
+}
+
+person_convos = {
+    PeopleIDs.PERSON_A:{
+        "testReq":
+        {
+        "text": "Here is some convo test dialog!"
+        }
     }
 }
 

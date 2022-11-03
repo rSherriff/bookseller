@@ -28,6 +28,7 @@ from sections.nav_section import NavSection
 from sections.notification import Notification
 from sections.presentation_section import PresentationSection
 from sections.shop_section import ShopSection
+from sections.person_section import PersonSection
 from shops import *
 from utils.definitions import (AdvanceDayStatus, AdvanceStoryStatus,
                                StorySegmentWaiting, TravelStatus)
@@ -49,6 +50,7 @@ SHOP_SECTION = "shopSection"
 HOME_SECTION = "homeSection"
 LOCATION_SECTION = "locationSection"
 PRESENTATION_SECTION = "presentationSection"
+PERSON_SECTION = "personSection"
 NAV_SECTION = "navSection"
 INFO_SECTION = "infoSection"
 
@@ -65,6 +67,7 @@ class PlayerState:
         self.sublocation = "Home"
         self.stock = Stock("PInv")
         self.story_segment = "start"
+        self.current_requests = []
         self.requests_performed = []
 
 class TimeState:
@@ -141,6 +144,7 @@ class Game(Engine):
         self.game_sections[SHOP_SECTION] = ShopSection(self, 0,0, self.screen_width, self.screen_height, SHOP_SECTION)
         self.game_sections[HOME_SECTION] = HomeSection(self, 0,0, self.screen_width, self.screen_height, HOME_SECTION)
         self.game_sections[LOCATION_SECTION] = LocationSection(self, 0,0, self.screen_width, self.screen_height, LOCATION_SECTION)
+        self.game_sections[PERSON_SECTION] = PersonSection(self, 0,0, self.screen_width, self.screen_height, PERSON_SECTION)
         self.game_sections[PRESENTATION_SECTION] = PresentationSection(self, int(self.screen_width * 0.25), int(self.screen_height * 0.25), int(self.screen_width * 0.5), int(self.screen_height * 0.5), PRESENTATION_SECTION)
         self.game_sections[NAV_SECTION] = NavSection(self, 0,self.screen_height - 5, self.screen_width, 5, NAV_SECTION)
         
@@ -151,8 +155,8 @@ class Game(Engine):
 
         self.completion_sections = OrderedDict()
 
-        self.disabled_sections = [CONFIRMATION_DIALOG, NOTIFICATION_DIALOG, MAP_SECTION, SHOP_SECTION, CLIENT_SECTION, HOME_SECTION, LOCATION_SECTION, PRESENTATION_SECTION]
-        self.disabled_ui_sections = [CONFIRMATION_DIALOG, NOTIFICATION_DIALOG, MAP_SECTION, SHOP_SECTION, CLIENT_SECTION, HOME_SECTION, LOCATION_SECTION, PRESENTATION_SECTION]
+        self.disabled_sections = [CONFIRMATION_DIALOG, NOTIFICATION_DIALOG, MAP_SECTION, SHOP_SECTION, CLIENT_SECTION, HOME_SECTION, LOCATION_SECTION, PRESENTATION_SECTION, PERSON_SECTION]
+        self.disabled_ui_sections = [CONFIRMATION_DIALOG, NOTIFICATION_DIALOG, MAP_SECTION, SHOP_SECTION, CLIENT_SECTION, HOME_SECTION, LOCATION_SECTION, PRESENTATION_SECTION, PERSON_SECTION]
 
     def close_all_main_sections(self):
         self.game_sections[SHOP_SECTION].close()
@@ -160,12 +164,14 @@ class Game(Engine):
         self.game_sections[HOME_SECTION].close()
         self.game_sections[CLIENT_SECTION].close()
         self.game_sections[LOCATION_SECTION].close()
+        self.game_sections[PERSON_SECTION].close()
 
         self.disable_section(SHOP_SECTION)
         self.disable_section(MAP_SECTION)
         self.disable_section(HOME_SECTION)
         self.disable_section(CLIENT_SECTION)
         self.disable_section(LOCATION_SECTION)
+        self.disable_section(PERSON_SECTION)
 
     def refresh_open_sections(self):
         for key, section in self.get_active_sections():
@@ -208,6 +214,10 @@ class Game(Engine):
         elif sublocation.type == LocationType.HOME:
             self.enable_section(HOME_SECTION)
             self.game_sections[HOME_SECTION].open()
+        elif sublocation.type == LocationType.PERSON:
+            self.enable_section(PERSON_SECTION)
+            self.game_sections[PERSON_SECTION].open(sublocation.person_id)
+
 
         self.change_main_section_state(MainSectionState.SUBLOCATION)
 
@@ -341,9 +351,15 @@ class Game(Engine):
         for client_id, requests in requests_to_unlock.items():
             client_manager[client_id].available_requests += requests
 
+    def start_request(self, request_to_start):
+        if request_to_start not in self.player.current_requests:
+            print("Starting request {0}".format(request_to_start))
+            self.player.current_requests.append(request_to_start)
+
     def complete_request(self, request_id, client_id):
         print("Completed request {0}".format(request_id))
         client_manager[client_id].complete_request(request_id)
+        self.player.current_requests.remove(request_id)
         self.player.requests_performed.append(request_id)
         self.try_advance_story_segment()
         self.game_sections[CLIENT_SECTION].request_satisfied()
