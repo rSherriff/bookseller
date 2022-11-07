@@ -38,6 +38,6 @@ class PersonSubLocation(SubLocation):
 
 location_manager = {
             "Client": Location("Client", {"Client":ClientSubLocation("Client", LocationType.CLIENT, ClientIDs.CLIENT_A)}),
-            "Bloomsbury": Location("Bloomsbury", {"skoob":SubLocation("Skoob", LocationType.SHOP), "hiden_shop":PersonSubLocation("hidden_shop", LocationType.PERSON, PeopleIDs.PERSON_A, True)}),
+            "Bloomsbury": Location("Bloomsbury", {"skoob":SubLocation("Skoob", LocationType.SHOP), "hidden_shop":PersonSubLocation("hidden_shop", LocationType.PERSON, PeopleIDs.PERSON_A, True)}),
             "Home": Location("Home", {"Home":SubLocation("Home", LocationType.HOME)})
         }

@@ -22,6 +22,7 @@ class PersonStates(Enum):
 class PersonSectionState(Enum):
     IDLE = auto(),
     DIALOG = auto(),
+    NOT_PRESENT = auto()
 
 class PersonSection(Section):
     def __init__(self, engine, x: int, y: int, width: int, height: int, name: string):
@@ -41,11 +42,18 @@ class PersonSection(Section):
         
     def open(self, person_id):
         self.state = PersonSectionState.IDLE
+        text_found = False
         for request_id in self.engine.player.current_requests:
-            print(request_id)
             if request_id in person_convos[person_id]:
                 self.convo_text = person_convos[person_id][request_id]["text"]
+                text_found = True
                 break
+
+        if not text_found:
+            self.convo_text = ""
+            self.text = "There is nothing at this location!"
+            self.current_dialog_index = len(self.text)
+            self.state = PersonSectionState.NOT_PRESENT
         
         self.animation_tick = 0
 
@@ -76,6 +84,8 @@ class PersonSection(Section):
             self.current_dialog_index = min(len(self.text), self.current_dialog_index)
 
             self.draw_text(console)
+        elif self.state == PersonSectionState.NOT_PRESENT:
+            self.draw_text(console)
 
 
     def close(self):
@@ -85,9 +95,9 @@ class PersonSection(Section):
         pass
 
     def keydown(self, key):
-        if self.state == PersonSectionState.IDLE:
-            self.start_character_talking(self.text, PersonSectionState.IDLE)
+        if self.state == PersonSectionState.IDLE and key == tcod.event.K_SPACE:
             self.text = self.convo_text
+            self.start_character_talking(self.text, PersonSectionState.IDLE)
         elif self.state == PersonSectionState.DIALOG and key == tcod.event.K_SPACE:
             self.current_dialog_index = len(self.text)
 
