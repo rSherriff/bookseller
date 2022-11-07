@@ -2,6 +2,7 @@ import string
 
 from locations import location_manager
 from ui.location_ui import LocationUI
+import tcod
 
 from sections.section import Section
 from sections.section_layouts import location_screen_info
@@ -32,6 +33,8 @@ class LocationSection(Section):
     def render(self, console):
         super().render(console)
 
+        console.print_box(location_screen_info["title"]["x"],location_screen_info["title"]["y"],location_screen_info["title"]["width"],location_screen_info["title"]["height"], string=self.location.name, fg=(255,255,255), alignment=tcod.CENTER)
+
         count = 0
         for location in self.location.sublocations.values():
             if not location.hidden:
@@ -40,6 +43,8 @@ class LocationSection(Section):
                 button_x = location_screen_info["locations"]["x"] + location_screen_info["locations"]["button_delta"]
                 console.print(button_x,location_screen_info["locations"]["y"]+ (count * location_screen_info["locations"]["gap"]),"Go")
             count += 1
+
+        console.print_box(location_screen_info["description"]["x"],location_screen_info["description"]["y"],location_screen_info["description"]["width"],location_screen_info["description"]["height"], string=self.location.desc, fg=(255,255,255), alignment=tcod.LEFT)
 
         self.render_ui(console)
       

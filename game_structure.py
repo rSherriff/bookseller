@@ -16,7 +16,7 @@ story_segments = {
         "requests_unlocked": {ClientIDs.CLIENT_A:["testReq"]},
         "location": LocationType.HOME,
         "trigger": StoryTriggerType.NONE,
-        "text": "Travel to the client!",
+        "text": "Travel to the client in Chelsea!",
         "nextSegment" : "seg2"
     },
     "seg2":{

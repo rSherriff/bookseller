@@ -35,10 +35,8 @@ class PresentationSection(Section):
         ##TEMP
 
         dc = 0
-        if key == tcod.event.K_1:
-            dc = 0
-        elif key == tcod.event.K_2:
-            dc = 1
+        if key >= tcod.event.K_1 and key <= tcod.event.K_9:
+            dc = key - 48
 
         c = 0
         for book in self.engine.player.stock.values():

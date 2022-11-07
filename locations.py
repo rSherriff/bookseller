@@ -1,6 +1,5 @@
 from difflib import get_close_matches
 from enum import Enum
-from mimetypes import init
 
 from utils.definitions import ClientIDs, PeopleIDs
 
@@ -12,9 +11,10 @@ class LocationType(Enum):
     PERSON = 3,
 
 class Location:
-    def __init__(self, name, sublocations) -> None:
+    def __init__(self, name, sublocations, desc) -> None:
         self.name = name
         self.sublocations = sublocations
+        self.desc = desc
 
     def search_sub_locations(self, search_term):
         return get_close_matches(search_term, self.sublocations.keys())
@@ -37,7 +37,7 @@ class PersonSubLocation(SubLocation):
         self.person_id = person_id
 
 location_manager = {
-            "Client": Location("Client", {"Client":ClientSubLocation("Client", LocationType.CLIENT, ClientIDs.CLIENT_A)}),
-            "Bloomsbury": Location("Bloomsbury", {"skoob":SubLocation("Skoob", LocationType.SHOP), "hidden_shop":PersonSubLocation("hidden_shop", LocationType.PERSON, PeopleIDs.PERSON_A, True)}),
-            "Home": Location("Home", {"Home":SubLocation("Home", LocationType.HOME)})
+            "Chelsea": Location("Chelsea", {"Chelsea":ClientSubLocation("Client", LocationType.CLIENT, ClientIDs.CLIENT_A)}, "Here is the description of this area. It will probably be rather long and extend across multiple lines. Three sentences would hopefully be enough."),
+            "Bloomsbury": Location("Bloomsbury", {"skoob":SubLocation("Skoob", LocationType.SHOP), "hidden_shop":PersonSubLocation("hidden_shop", LocationType.PERSON, PeopleIDs.PERSON_A, True)},"Here is the description of this area. It will probably be rather long and extend across multiple lines. Three sentences would hopefully be enough."),
+            "Southwark": Location("Southwark", {"Home":SubLocation("Home", LocationType.HOME)},"Here is the description of this area. It will probably be rather long and extend across multiple lines. Three sentences would hopefully be enough.")
         }

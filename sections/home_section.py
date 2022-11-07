@@ -1,6 +1,6 @@
 import string
 
-from tcod import Console
+import tcod
 from ui.home_ui import HomeUI
 from utils.definitions import StorySegmentWaiting
 
@@ -25,6 +25,8 @@ class HomeSection(Section):
     
     def render(self, console):
         super().render(console)
+        console.print_box(home_screen_info["title"]["x"],home_screen_info["title"]["y"],home_screen_info["title"]["width"],home_screen_info["title"]["height"], string="Home", fg=(255,255,255), alignment=tcod.CENTER)
+
         self.render_ui(console)
               
     def mousedown(self,button,x,y):

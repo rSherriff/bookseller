@@ -1,5 +1,6 @@
 import string
 
+import tcod
 from shops import *
 from ui.shop_ui import ShopUI
 
@@ -31,9 +32,11 @@ class ShopSection(Section):
     def render(self, console):
         super().render(console)
 
-        console.print(4,4,"We are at {0}".format(self.shop.name))
+        console.print_box(shop_screen_info["title"]["x"],shop_screen_info["title"]["y"],shop_screen_info["title"]["width"],shop_screen_info["title"]["height"], string=self.shop.name, fg=(255,255,255), alignment=tcod.CENTER)
 
-        console.print(4,6,"Stock:")
+        info_text = "The following books catch your eye:"
+        console.print_box(shop_screen_info["shop_info"]["x"],shop_screen_info["shop_info"]["y"],len(info_text), height=1, string=info_text, fg=(255,255,255), alignment=tcod.CENTER)
+
         count = 0
         for book in self.shop.stock.values():
             console.print(shop_screen_info["books"]["x"],shop_screen_info["books"]["y"]+ (count * shop_screen_info["books"]["gap"]),"{0}: {1}".format(book.id, book.title), fg=(255,255,255))

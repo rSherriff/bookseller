@@ -3,6 +3,7 @@ from actions.game_actions import ChangePlayerSublocationAction, SearchLocationAc
 
 from ui.ui import UI, Tooltip, Button, Input
 from books import book_manager
+from sections.section_layouts import location_screen_info
 
 
 class LocationUI(UI):
@@ -20,5 +21,5 @@ class LocationUI(UI):
             count += 1
 
     def setup_search_bar(self, location_name):
-        search_bar = Input(7,27,20,1, SearchLocationAction(self.section.engine,self.section, location_name))
+        search_bar = Input(location_screen_info["search_bar"]["x"],location_screen_info["search_bar"]["y"],location_screen_info["search_bar"]["width"],location_screen_info["search_bar"]["height"], SearchLocationAction(self.section.engine,self.section, location_name))
         self.add_element(search_bar)

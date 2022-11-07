@@ -63,7 +63,7 @@ class MainSectionState(Enum):
 class PlayerState:
     def __init__(self) -> None:
         self.name = "Player"
-        self.location = "Home"
+        self.location = "Southwark"
         self.sublocation = "Home"
         self.stock = Stock("PInv")
         self.story_segment = "start"
@@ -222,7 +222,7 @@ class Game(Engine):
         self.change_main_section_state(MainSectionState.SUBLOCATION)
 
     def can_player_change_location(self, location):
-        if (self.time.get_hour() + game_rules["LocationTravelTimeIncrement"]) >= game_rules["DayEndHour"] and location != "Home":
+        if (self.time.get_hour() + game_rules["LocationTravelTimeIncrement"]) >= game_rules["DayEndHour"] and location != "Southwark":
             return TravelStatus.DAY_OVER
         elif location == self.player.location:
             return TravelStatus.ALREADY_PRESENT
@@ -230,7 +230,7 @@ class Game(Engine):
             return TravelStatus.FINE
 
     def can_player_change_sublocation(self, sublocation):
-        if (self.time.get_hour() + game_rules["SublocationTravelTimeIncrement"]) >= game_rules["DayEndHour"] and sublocation != "Home":
+        if (self.time.get_hour() + game_rules["SublocationTravelTimeIncrement"]) >= game_rules["DayEndHour"] and sublocation != "Southwark":
             return TravelStatus.DAY_OVER
         elif sublocation == self.player.sublocation:
             return TravelStatus.ALREADY_PRESENT

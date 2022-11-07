@@ -13,28 +13,52 @@ main_background = (23,18,25)
 
 
 home_screen_info = {
+    "title":{
+        "x":10,
+        "y":5,
+        "width":36,
+        "height":1
+    },
     "advance_day_btn":{
         "x":6,
-        "y":6,
+        "y":26,
         "width": 15,
         "height":5
     }
 }
 
 location_screen_info = {
+    "title":{
+        "x":10,
+        "y":5,
+        "width":36,
+        "height":1
+    },
     "locations":{
-        "x":6,
-        "y":7,
+        "x":12,
+        "y":9,
         "gap": 2,
-        "button_delta" : 25
+        "button_delta" : 28
+    },
+    "description":{
+        "x":10,
+        "y":22,
+        "width":38,
+        "height":5
+    },
+    "search_bar":{
+        "x":19,
+        "y":30,
+        "width":20,
+        "height":1
     }
 }
 
 map_screen_info = {
     "locations":{
-        ("Client", 13, 25, 7, 1),
+        ("Chelsea", 13, 25, 8, 1),
         ("Bloomsbury", 29, 11, 11, 1),
-        ("Home", 37, 31, 5, 1),
+        ("Southwark", 37, 31, 10, 1),
     }
 }
 
@@ -43,25 +67,27 @@ client_misc_tiles_info = {
     {
         "x":0,
         "y":0,
-        "width":3,
-        "height":3
+        "width":4,
+        "height":4
     }
 }
 
 client_screen_info = {
     "text":
     {
-        "x":20,
+        "x":21,
         "y":6,
         "width":30,
-        "height":10
+        "height":10,
+        "decoration":dialog_box_decoration_filled,
+        "max_width":25
     },
     "speech_mark":
     {
-        "x":16,
-        "y":6,
-        "width":3,
-        "height":3
+        "x":20,
+        "y":8,
+        "width":4,
+        "height":4
     }
 }
 
@@ -84,11 +110,27 @@ client_character_info = {
 
 
 shop_screen_info = {
+    "title":{
+        "x":10,
+        "y":5,
+        "width":36,
+        "height":1
+    },
+    "shop_info":{
+       "x":10,
+        "y":9
+    },
+    "description":{
+        "x":10,
+        "y":22,
+        "width":38,
+        "height":5
+    },
     "books":{
-        "x":6,
-        "y":7,
+        "x":12,
+        "y":12,
         "gap": 2,
-        "button_delta" : 25
+        "button_delta" : 28
     }
 }
 
