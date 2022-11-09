@@ -343,6 +343,13 @@ class Game(Engine):
             self.unlock_requests(segment["requests_unlocked"])
         self.clear_story_segment_waiting()
 
+    #TEMP - Need to add a bespoke dialog for story segments
+    def close_notification_dialog(self, section):
+        self.disable_section(NOTIFICATION_DIALOG)
+        self.enable_ui_sections(self.sections_disabled_by_dialog)
+        self.try_advance_story_segment()
+        self.refresh_open_sections()
+
     #*********************************************
     # Requests
     #*********************************************

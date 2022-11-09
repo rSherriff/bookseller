@@ -9,6 +9,13 @@ client_status = {
 
 story_segments = {
     "start":{
+        "nextSegment" : "chapter1title"
+    },
+    "chapter1title":{
+        "title" : "chapter1title",
+        "location": LocationType.HOME,
+        "trigger": StoryTriggerType.NONE,
+        "text": "Chapter 1: April 1983",
         "nextSegment" : "seg1"
     },
     "seg1":{
