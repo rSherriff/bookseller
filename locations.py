@@ -37,7 +37,7 @@ class PersonSubLocation(SubLocation):
         self.person_id = person_id
 
 location_manager = {
-            "Chelsea": Location("Chelsea", {"Client":ClientSubLocation("Client", LocationType.CLIENT, ClientIDs.CLIENT_A)}, "Here is the description of this area. It will probably be rather long and extend across multiple lines. Three sentences would hopefully be enough."),
-            "Bloomsbury": Location("Bloomsbury", {"Skoob":SubLocation("Skoob", LocationType.SHOP), "hidden_shop":PersonSubLocation("hidden_shop", LocationType.PERSON, PeopleIDs.PERSON_A, True)},"Here is the description of this area. It will probably be rather long and extend across multiple lines. Three sentences would hopefully be enough."),
-            "Southwark": Location("Southwark", {"Home":SubLocation("Home", LocationType.HOME)},"Here is the description of this area. It will probably be rather long and extend across multiple lines. Three sentences would hopefully be enough.")
+            "Chelsea": Location("Chelsea", {"Client":ClientSubLocation("Client", LocationType.CLIENT, ClientIDs.CLIENT_A)}, "In west London, lost sixties cool makes way for cheap eighties money"),
+            "Bloomsbury": Location("Bloomsbury", {"Skoob":SubLocation("Skoob", LocationType.SHOP), "hidden_shop":PersonSubLocation("hidden_shop", LocationType.PERSON, PeopleIDs.PERSON_A, True)},"Set across multiple leafy squares, Bloomsbury is the traditional centre of British publishing."),
+            "Southwark": Location("Southwark", {"Home":SubLocation("Home", LocationType.HOME)},"Southwark has for centuries accepted the exiles of the city. Heavily industrial, the last docks here have begun to close.")
         }
