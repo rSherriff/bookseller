@@ -12,10 +12,10 @@ class ConfirmationUI(UI):
         self.confirm_button = Button(x=b_px, y=b_y, width=b_width,height=b_height, click_action=None)
         self.add_element(self.confirm_button)
 
-        self.confirm_close_button = Button(x=b_px, y=b_y, width=b_width, height=b_height, click_action=CloseConfirmationDialog(self.section.engine, None),n_fg=confirmation_dialog_info["b_fg_color"],h_fg=confirmation_dialog_info["b_h_color"])
+        self.confirm_close_button = Button(x=b_px, y=b_y, width=b_width, height=b_height, click_action=CloseConfirmationDialog(self.section.engine, None),h_fg=confirmation_dialog_info["b_h_color"])
         self.add_element(self.confirm_close_button)
 
-        self.close_button = Button(x=b_nx, y=b_y, width=b_width, height=b_height, click_action=CloseConfirmationDialog(self.section.engine, None),n_fg=confirmation_dialog_info["b_fg_color"],h_fg=confirmation_dialog_info["b_h_color"])
+        self.close_button = Button(x=b_nx, y=b_y, width=b_width, height=b_height, click_action=CloseConfirmationDialog(self.section.engine, None),h_fg=confirmation_dialog_info["b_h_color"])
         self.add_element(self.close_button)
 
     def reset(self, confirmation_action, section, enable_ui_on_confirm, button_mask):

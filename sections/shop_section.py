@@ -22,9 +22,9 @@ class ShopSection(Section):
     def refresh(self):
         self.ui.clear()
         self.ui.setup_book_tooltips(shop_screen_info["books"]["x"],shop_screen_info["books"]["y"],shop_screen_info["books"]["gap"],self.shop.stock.get_book_ids())
-        
-        button_x = shop_screen_info["books"]["x"] + shop_screen_info["books"]["button_delta"]
-        self.ui.setup_book_buttons(button_x,shop_screen_info["books"]["y"],shop_screen_info["books"]["gap"],self.shop.name,self.shop.stock.get_book_ids())
+
+        button_mask = [[False,False,False,False,False],[False,True,True,True,False],[False,False,False,False,False]]
+        self.ui.setup_book_buttons(self.button_x()-1,shop_screen_info["books"]["y"]-1,shop_screen_info["books"]["gap"],self.shop.name,self.shop.stock.get_book_ids(),button_mask)
 
     def update(self):
         super().update()
@@ -39,10 +39,10 @@ class ShopSection(Section):
 
         count = 0
         for book in self.shop.stock.values():
-            console.print(shop_screen_info["books"]["x"],shop_screen_info["books"]["y"]+ (count * shop_screen_info["books"]["gap"]),"{0}: {1}".format(book.id, book.title), fg=(255,255,255))
+            console.print(shop_screen_info["books"]["x"],shop_screen_info["books"]["y"]+ (count * shop_screen_info["books"]["gap"]),book.title, fg=(255,255,255))
 
-            button_x = shop_screen_info["books"]["x"] + shop_screen_info["books"]["button_delta"]
-            console.print(button_x,shop_screen_info["books"]["y"]+ (count * shop_screen_info["books"]["gap"]),"Buy")
+            console.draw_frame(self.button_x()-1,shop_screen_info["books"]["y"]+ (count * shop_screen_info["books"]["gap"])-1,width=shop_screen_info["button_width"],height=shop_screen_info["button_height"], decoration=shop_screen_info["button_decoration"], bg=shop_screen_info["b_bg_color"], fg=shop_screen_info["b_fg_color"])
+            console.print_box(self.button_x(),shop_screen_info["books"]["y"]+ (count * shop_screen_info["books"]["gap"]),width=shop_screen_info["button_width"]-2,height=shop_screen_info["button_height"]-2,string="Buy",alignment=tcod.CENTER, bg=shop_screen_info["b_font_bg_color"], fg=shop_screen_info["b_font_fg_color"])
             count += 1
 
         self.render_ui(console)
@@ -52,5 +52,8 @@ class ShopSection(Section):
 
     def keydown(self, key):
         pass
+
+    def button_x(self):
+        return  shop_screen_info["books"]["x"] + shop_screen_info["books"]["button_delta"]
 
     

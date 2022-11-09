@@ -11,12 +11,13 @@ class LocationUI(UI):
         super().__init__(section, x, y)
         self.tiles = tiles
 
-    def setup_sublocation_buttons(self, x, y, y_gap, sublocation_names):
+    def setup_sublocation_buttons(self, x, y, y_gap, sublocation_names, button_mask):
         count = 0
         for sublocation_name in sublocation_names:
-            bd = [x, y + ( y_gap * count), 2, 1]  # Button Dimensions
+            bd = [x, y + ( y_gap * count),location_screen_info["button_width"], location_screen_info["button_height"]]  # Button Dimensions
             b = Button(x=bd[0], y=bd[1], width=bd[2], height=bd[3], click_action=OpenConfirmationDialog(
-            self.section.engine, "Travel to {0}?".format(sublocation_name), ChangePlayerSublocationAction(self.section.engine, sublocation_name), self.section.name, enable_ui_on_confirm=False))
+            self.section.engine, "Travel to {0}?".format(sublocation_name), ChangePlayerSublocationAction(self.section.engine, sublocation_name), self.section.name, enable_ui_on_confirm=False),h_fg=location_screen_info["b_h_color"])
+            b.set_mask(button_mask)
             self.add_element(b)
             count += 1
 

@@ -8,6 +8,8 @@ black = (0,0,0)
 white = (255,255,255)
 grey=(158,158,158)
 pink = (255,51,102)
+orange = (255,191,0)
+red=(255,0,0)
 
 main_background = (23,18,25)
 
@@ -37,7 +39,7 @@ location_screen_info = {
     "locations":{
         "x":12,
         "y":9,
-        "gap": 2,
+        "gap": 3,
         "button_delta" : 28
     },
     "description":{
@@ -51,7 +53,15 @@ location_screen_info = {
         "y":30,
         "width":20,
         "height":1
-    }
+    },
+    "button_decoration":button_box_decoration,
+    "button_width":4,
+    "button_height":3,
+    "b_fg_color": main_background,
+    "b_bg_color":main_background,
+    "b_h_color":orange,
+    "b_font_fg_color":grey,
+    "b_font_bg_color":main_background,
 }
 
 map_screen_info = {
@@ -129,9 +139,17 @@ shop_screen_info = {
     "books":{
         "x":12,
         "y":12,
-        "gap": 2,
+        "gap": 3,
         "button_delta" : 28
-    }
+    },
+    "button_decoration":button_box_decoration,
+    "button_width":5,
+    "button_height":3,
+    "b_fg_color": main_background,
+    "b_bg_color":main_background,
+    "b_h_color":orange,
+    "b_font_fg_color":grey,
+    "b_font_bg_color":main_background,
 }
 
 confirmation_dialog_info = {
