@@ -45,7 +45,7 @@ class Notification(Section):
 
     def draw_dialog(self, console):
         console.draw_frame(x=self.render_x,y=self.render_y,width=self.render_width,height=self.render_height, decoration=notification_dialog_info["dialog_decoration"], bg=(0,0,0), fg=(255,255,255))
-        console.print_box(x=self.render_x+1,y=self.render_y+2,width=self.render_width-1,height=self.render_height-2,string=self.text,alignment=tcod.CENTER, bg=(255,255,255), fg=(0,0,0))
+        console.print_box(x=self.render_x+1,y=self.render_y+2,width=self.render_width-2,height=self.render_height-2,string=self.text,alignment=tcod.CENTER, bg=(255,255,255), fg=(0,0,0))
 
     def draw_button(self, console, x, y, text):
         console.draw_frame(x=x,y=y,width=notification_dialog_info["button_width"],height=notification_dialog_info["button_height"], decoration=notification_dialog_info["button_decoration"], bg=notification_dialog_info["b_bg_color"], fg=notification_dialog_info["b_fg_color"])

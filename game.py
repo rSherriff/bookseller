@@ -124,6 +124,7 @@ class Game(Engine):
         super().setup_effects()
         self.advance_day_effect = MeltWipeEffect(self, 0, 0, self.screen_width, self.screen_height, MeltWipeEffectType.RANDOM, 20)
         self.change_location_effect = HorizontalWipeEffect(self, 0, 0, self.screen_width, self.screen_height)
+        self.change_sublocation_effect = HorizontalWipeEffect(self, 0, 0, self.screen_width, self.screen_height)
 
     #*********************************************
     # Sections
@@ -252,6 +253,8 @@ class Game(Engine):
         if self.can_player_change_location(sublocation):
             self.player.sublocation = sublocation
             self.display_current_sublocation()
+            self.set_full_screen_effect(self.change_sublocation_effect, [HorizontalWipeDirection.LEFT])
+            self.start_full_screen_effect()
             self.try_advance_story_segment()
             self.refresh_open_sections()
 
