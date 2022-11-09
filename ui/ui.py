@@ -351,7 +351,7 @@ class Tooltip(UIElement):
 
     def is_mouseover(self, x,y):
         if self.visible == True:
-            is_mouseover_trigger = self.x<= x <= self.x + self.render_width - 1 and self.y <= y <= self.y + self.render_height - 1
+            is_mouseover_trigger = self.x<= x <= self.x + self.render_width - 1 and self.y <= y <= self.y + self.height - 1
             is_mouseover_render = self.render_x<= x <= self.render_x + self.render_width - 1 and self.render_y <= y <= self.render_y + self.render_height - 1
             return is_mouseover_trigger or is_mouseover_render
         else:
