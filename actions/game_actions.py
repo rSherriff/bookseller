@@ -98,6 +98,13 @@ class PresentRequestSolutionAction(Action):
     def perform(self):
         self.engine.present_request_solution(self.request_id, self.solution_id, self.client_id)
 
+class ClosePresentationDialogAction(Action):
+    def __init__(self, engine) -> None:
+        super().__init__(engine)
+
+    def perform(self) -> None:
+        self.engine.close_presentation_dialog()
+
 
 #*********************************************
 # Time

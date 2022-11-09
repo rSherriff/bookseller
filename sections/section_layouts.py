@@ -152,6 +152,26 @@ shop_screen_info = {
     "b_font_bg_color":main_background,
 }
 
+presentation_dialog_info = {
+    "books":{
+        "x":2,
+        "y":5,
+        "gap": 3
+    },
+    "close_button":{
+        "x":11,
+        "y":16,
+        "text":"Close"
+    },
+    "button_decoration":button_box_decoration,
+    "button_height":3,
+    "b_fg_color": main_background,
+    "b_bg_color":main_background,
+    "b_h_color":orange,
+    "b_font_fg_color":grey,
+    "b_font_bg_color":main_background,
+}
+
 confirmation_dialog_info = {
     "dialog_decoration":dialog_box_decoration_filled,
     "button_decoration":button_box_decoration,

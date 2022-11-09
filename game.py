@@ -377,6 +377,8 @@ class Game(Engine):
         else:
             print("Presenting {0} for request {1} - {2}".format(solution_id, request_id, format_red_background("INCORRECT!")))
             self.fail_request(request_id, client_id)
+        
+        self.close_presentation_dialog()
 
     def open_presentation_dialog(self, request_id, client_id):
         self.game_sections[PRESENTATION_SECTION].open(request_id, client_id)
