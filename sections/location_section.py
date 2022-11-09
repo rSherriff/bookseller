@@ -22,7 +22,7 @@ class LocationSection(Section):
        
         button_x = location_screen_info["locations"]["x"] + location_screen_info["locations"]["button_delta"] -1
         button_mask = [[False,False,False,False],[False,True,True,False],[False,False,False,False]]
-        self.ui.setup_sublocation_buttons(button_x,location_screen_info["locations"]["y"]-1,location_screen_info["locations"]["gap"],self.location.sublocations.keys(),button_mask)
+        self.ui.setup_sublocation_buttons(button_x,location_screen_info["locations"]["y"]-1,location_screen_info["locations"]["gap"],self.location.sublocations.values(),button_mask)
         self.ui.setup_search_bar(self.location.name)
 
     def close(self):

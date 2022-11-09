@@ -38,6 +38,6 @@ class PersonSubLocation(SubLocation):
 
 location_manager = {
             "Chelsea": Location("Chelsea", {"Client":ClientSubLocation("Client", LocationType.CLIENT, ClientIDs.CLIENT_A)}, "Here is the description of this area. It will probably be rather long and extend across multiple lines. Three sentences would hopefully be enough."),
-            "Bloomsbury": Location("Bloomsbury", {"skoob":SubLocation("Skoob", LocationType.SHOP), "hidden_shop":PersonSubLocation("hidden_shop", LocationType.PERSON, PeopleIDs.PERSON_A, True)},"Here is the description of this area. It will probably be rather long and extend across multiple lines. Three sentences would hopefully be enough."),
+            "Bloomsbury": Location("Bloomsbury", {"Skoob":SubLocation("Skoob", LocationType.SHOP), "hidden_shop":PersonSubLocation("hidden_shop", LocationType.PERSON, PeopleIDs.PERSON_A, True)},"Here is the description of this area. It will probably be rather long and extend across multiple lines. Three sentences would hopefully be enough."),
             "Southwark": Location("Southwark", {"Home":SubLocation("Home", LocationType.HOME)},"Here is the description of this area. It will probably be rather long and extend across multiple lines. Three sentences would hopefully be enough.")
         }
