@@ -19,7 +19,7 @@ class VerticalWipeEffect(Effect):
         self.current_wipe_height = 0
         
     def render(self, console):
-        if self.time_alive > self.lifespan:
+        if abs(self.current_wipe_height) > self.height:
             self.stop()
         
         if(self.direction == VerticalWipeDirection.DOWN):
