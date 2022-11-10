@@ -10,7 +10,6 @@ class Effect():
         self.width = width
         self.height = height
         self.in_effect = False
-        self.lifespan = 10
         self.time_alive = 0
         self.tiles_set = False
 
