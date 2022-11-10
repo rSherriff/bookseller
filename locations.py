@@ -9,6 +9,7 @@ class LocationType(Enum):
     SHOP = 1,
     HOME = 2,
     PERSON = 3,
+    MUSEUM = 4,
 
 class Location:
     def __init__(self, name, sublocations, desc) -> None:
@@ -24,6 +25,7 @@ class SubLocation:
     def __init__(self, name, type, hidden = False) -> None:
         self.name = name
         self.type = type
+        self.desc = ""
         self.hidden = hidden
 
 class ClientSubLocation(SubLocation):
@@ -37,7 +39,8 @@ class PersonSubLocation(SubLocation):
         self.person_id = person_id
 
 location_manager = {
-            "Chelsea": Location("Chelsea", {"Client":ClientSubLocation("Client", LocationType.CLIENT, ClientIDs.CLIENT_A)}, "In west London, lost sixties cool makes way for cheap eighties money"),
-            "Bloomsbury": Location("Bloomsbury", {"Skoob":SubLocation("Skoob", LocationType.SHOP), "hidden_shop":PersonSubLocation("hidden_shop", LocationType.PERSON, PeopleIDs.PERSON_A, True)},"Set across multiple leafy squares, Bloomsbury is the traditional centre of British publishing."),
-            "Southwark": Location("Southwark", {"Home":SubLocation("Home", LocationType.HOME)},"Southwark has for centuries accepted the exiles of the city. Heavily industrial, the last docks here have begun to close.")
+            "Chelsea": Location("Chelsea", {"Client":ClientSubLocation("Client", LocationType.CLIENT, ClientIDs.CLIENT_A)}, "In west London, lost sixties cool makes way for cheap eighties money."),
+            "Bloomsbury": Location("Bloomsbury", {"Dennis":PersonSubLocation("Dennis", LocationType.PERSON, PeopleIDs.DENNIS, True), "Museum":SubLocation("Museum", LocationType.MUSEUM)},"Set across multiple leafy squares, Bloomsbury is the traditional centre of British publishing."),
+            "Southwark": Location("Southwark", {"Home":SubLocation("Home", LocationType.HOME)},"Southwark has for centuries accepted the exiles of the city. Heavily industrial, the last docks here have begun to close."),
+            "Covent Garden":Location("Bloomsbury", {"Segap":SubLocation("Segap", LocationType.SHOP)},"Cobbles lie treacherously around the newly renovated market shed.")
         }

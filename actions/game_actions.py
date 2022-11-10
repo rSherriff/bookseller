@@ -1,8 +1,10 @@
-from utils.definitions import TravelStatus, AdvanceDayStatus
+from difflib import get_close_matches
 
-from actions.actions import Action, OpenConfirmationDialog, OpenNotificationDialog
+from actions.actions import (Action, OpenConfirmationDialog,
+                             OpenNotificationDialog)
+from game_structure import musuem_info
 from locations import location_manager
-
+from utils.definitions import AdvanceDayStatus, TravelStatus
 
 #*********************************************
 # Locations
@@ -69,6 +71,23 @@ class SearchLocationAction(Action):
         else:
             OpenNotificationDialog(self.engine, "Location not found!", self.section).perform()
 
+
+#*********************************************
+# Musuem
+#*********************************************
+
+class SearchMuseumAction(Action):
+    def __init__(self, engine, section) -> None:
+        super().__init__(engine)
+        self.section = section
+
+    def perform(self, search_term) -> None:
+        museum_matches = get_close_matches(search_term, musuem_info.keys())
+        if len(museum_matches) > 0:
+            info = musuem_info[museum_matches[0]]
+            OpenNotificationDialog(self.engine, info, self.section).perform()
+        else:
+            OpenNotificationDialog(self.engine, "No information found!", self.section).perform()
 
 
 #*********************************************

@@ -64,11 +64,41 @@ location_screen_info = {
     "b_font_bg_color":main_background,
 }
 
+museum_screen_info = {
+    "title":{
+        "x":10,
+        "y":5,
+        "width":36,
+        "height":1
+    },
+    "description":{
+        "x":10,
+        "y":22,
+        "width":38,
+        "height":5
+    },
+    "search_bar":{
+        "x":18,
+        "y":20,
+        "width":20,
+        "height":1
+    },
+    "button_decoration":button_box_decoration,
+    "button_width":4,
+    "button_height":3,
+    "b_fg_color": main_background,
+    "b_bg_color":main_background,
+    "b_h_color":orange,
+    "b_font_fg_color":grey,
+    "b_font_bg_color":main_background,
+}
+
 map_screen_info = {
     "locations":{
         ("Chelsea", 13, 25, 8, 1),
         ("Bloomsbury", 29, 11, 11, 1),
         ("Southwark", 37, 31, 10, 1),
+        ("Covent Garden", 29, 19, 14, 1),
     }
 }
 
@@ -86,7 +116,7 @@ client_screen_info = {
     "text":
     {
         "x":21,
-        "y":6,
+        "y":5,
         "width":30,
         "height":10,
         "decoration":dialog_box_decoration_filled,

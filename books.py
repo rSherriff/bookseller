@@ -40,10 +40,10 @@ class Stock:
 
 
 book_manager = {
-        "1": Book("1","I am Error", "Here is the book you need to satisfy the request!"),
-        "2": Book("2","testBook", "Here is a test book, it eventually will have lots of descriptive information!"),
-        "3": Book("3","testBook", "Here is a test book, it eventually will have lots of descriptive information!"),
-        "4": Book("4","testBook", "Here is a test book, it eventually will have lots of descriptive information!"),
-        "5": Book("5","testBook", "Here is a test book, it eventually will have lots of descriptive information!"),
-        "6": Book("6","testBook", "Here is a test book, it eventually will have lots of descriptive information!"),
+        "1": Book("1","Ogdoas Scholastica", "A heavy foolscap octavo. The fronitspiece is a city on a hill."),
+        "6": Book("6","Theatrum philosophicum", "A rough, buckram bound book.  The frontispiece depicts an eight-sided church tower above the date 1676"),
+        "2": Book("2","Lexicon philosophicum", "A book bound in old calf. Dated 1632."),
+        "3": Book("3","Metaphysicae systema methodicum", "The fortispiece claims this book is the work of Christian Rosencrantz. It is dated 1653."),
+        "rosacrucian": Book("rosacrucian","The Sacred Marriage", "A small book dated 1627. The frontispiece depicts an eight-sided church tower above the word 'Fecit'."),
+        "5": Book("5","Simplicius Simplicissimus", "A poorly bound quatro, you have to hold the pages in. Sine loco, anno, vel nomine"),
     }

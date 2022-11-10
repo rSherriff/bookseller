@@ -29,6 +29,7 @@ from sections.notification import Notification
 from sections.presentation_section import PresentationSection
 from sections.shop_section import ShopSection
 from sections.person_section import PersonSection
+from sections.musuem_section import MuseumSection
 from shops import *
 from utils.definitions import (AdvanceDayStatus, AdvanceStoryStatus,
                                StorySegmentWaiting, TravelStatus)
@@ -53,6 +54,7 @@ PRESENTATION_SECTION = "presentationSection"
 PERSON_SECTION = "personSection"
 NAV_SECTION = "navSection"
 INFO_SECTION = "infoSection"
+MUSEUM_SECTION = "museumSection"
 
 class MainSectionState(Enum):
     NONE = auto(),
@@ -147,7 +149,8 @@ class Game(Engine):
         self.game_sections[LOCATION_SECTION] = LocationSection(self, 0,0, self.screen_width, self.screen_height, LOCATION_SECTION)
         self.game_sections[PERSON_SECTION] = PersonSection(self, 0,0, self.screen_width, self.screen_height, PERSON_SECTION)
         self.game_sections[PRESENTATION_SECTION] = PresentationSection(self, int(self.screen_width * 0.25), int(self.screen_height * 0.25), int(self.screen_width * 0.5), int(self.screen_height * 0.5), PRESENTATION_SECTION)
-        self.game_sections[NAV_SECTION] = NavSection(self, 0,self.screen_height - 5, self.screen_width, 5, NAV_SECTION)
+        self.game_sections[MUSEUM_SECTION] = MuseumSection(self, 0,0, self.screen_width, self.screen_height, MUSEUM_SECTION)
+        self.game_sections[NAV_SECTION] = NavSection(self, 0,self.screen_height - 5, self.screen_width, 5, NAV_SECTION)     
         
         
         self.misc_sections = OrderedDict()
@@ -166,6 +169,7 @@ class Game(Engine):
         self.game_sections[CLIENT_SECTION].close()
         self.game_sections[LOCATION_SECTION].close()
         self.game_sections[PERSON_SECTION].close()
+        self.game_sections[MUSEUM_SECTION].close()
 
         self.disable_section(SHOP_SECTION)
         self.disable_section(MAP_SECTION)
@@ -173,6 +177,7 @@ class Game(Engine):
         self.disable_section(CLIENT_SECTION)
         self.disable_section(LOCATION_SECTION)
         self.disable_section(PERSON_SECTION)
+        self.disable_section(MUSEUM_SECTION)
 
     def refresh_open_sections(self):
         for key, section in self.get_active_sections():
@@ -218,7 +223,9 @@ class Game(Engine):
         elif sublocation.type == LocationType.PERSON:
             self.enable_section(PERSON_SECTION)
             self.game_sections[PERSON_SECTION].open(sublocation.person_id)
-
+        elif sublocation.type == LocationType.MUSEUM:
+            self.enable_section(MUSEUM_SECTION)
+            self.game_sections[MUSEUM_SECTION].open()
 
         self.change_main_section_state(MainSectionState.SUBLOCATION)
 

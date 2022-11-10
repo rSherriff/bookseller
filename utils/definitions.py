@@ -28,7 +28,7 @@ class ClientIDs(Enum):
     CLIENT_A = auto()
 
 class PeopleIDs(Enum):
-    PERSON_A = auto()
+    DENNIS = auto()
 
 class TextEffects(Enum):
     PAUSE = auto()

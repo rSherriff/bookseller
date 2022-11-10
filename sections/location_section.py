@@ -44,7 +44,7 @@ class LocationSection(Section):
                 button_x = location_screen_info["locations"]["x"] + location_screen_info["locations"]["button_delta"] - 1
                 console.draw_frame(button_x,location_screen_info["locations"]["y"]+ (count * location_screen_info["locations"]["gap"])-1,width=location_screen_info["button_width"],height=location_screen_info["button_height"], decoration=location_screen_info["button_decoration"], bg=location_screen_info["b_bg_color"], fg=location_screen_info["b_fg_color"])
                 console.print_box(button_x+1,location_screen_info["locations"]["y"]+ (count * location_screen_info["locations"]["gap"]),width=location_screen_info["button_width"]-2,height=location_screen_info["button_height"]-2,string="Go",alignment=tcod.CENTER, bg=location_screen_info["b_font_bg_color"], fg=location_screen_info["b_font_fg_color"])
-            count += 1
+                count += 1
 
         console.print_box(location_screen_info["description"]["x"],location_screen_info["description"]["y"],location_screen_info["description"]["width"],location_screen_info["description"]["height"], string=self.location.desc, fg=(255,255,255), alignment=tcod.LEFT)
 
