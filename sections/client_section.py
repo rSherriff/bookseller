@@ -14,6 +14,7 @@ from sections.section import Section
 from sections.section_layouts import (client_character_info,
                                       client_misc_tiles_info,
                                       client_screen_info)
+from utils.definitions import TextEffects
 
 
 class CharacterStates(Enum):
@@ -39,11 +40,15 @@ class ClientSection(Section):
         self.animation_tick_interval = 0.3
         self.animation_tick = 0
         
+        # Dialog 
         self.text = ""
-        self.dialog_tick_interval = 0.1
+        self.dialog_tick_interval = 0
         self.character_currently_talking = False
         self.current_dialog_index = 0
+        self.current_pause = 0
+        self.text_effects = []
         self.state_after_dialog = None
+        self.num_line_breaks = 0
         
     def open(self, client_id):
         self.client = client_manager[client_id]
@@ -58,12 +63,13 @@ class ClientSection(Section):
 
         self.animation_tick = 0
 
-        self.dialog_tick_loop()
-        self.animation_tick_loop()
 
     def update(self):
         super().update()
-    
+
+        if self.state == ClientSectionState.DIALOG:
+            self.dialog_tick_loop()
+                
     def render(self, console):
         super().render(console)
 
@@ -83,8 +89,8 @@ class ClientSection(Section):
             else:
                 self.draw_character(console, "talk_two")
         
-            self.draw_speech_mark(console)           
-            
+            self.draw_speech_mark(console)  
+
             if self.current_dialog_index > len(self.text):
                 self.character_currently_talking = False
                 self.change_state(self.state_after_dialog)
@@ -119,6 +125,8 @@ class ClientSection(Section):
 
         if new_state == ClientSectionState.DIALOG:
             self.character_currently_talking = True
+            self.analyse_text()
+            
         elif new_state == ClientSectionState.PRESENTATION:
             self.character_currently_talking = False
 
@@ -163,31 +171,51 @@ class ClientSection(Section):
 
     def draw_dialog(self, console):
         render_width =  client_screen_info["text"]["max_width"]
-        render_height = ceil(self.get_current_dialog_index() / render_width)
+        render_height = ceil((self.get_current_dialog_index() + (render_width * self.num_line_breaks)) / render_width)
         render_width += 4
         render_height += 4
 
         console.draw_frame(x=client_screen_info["text"]["x"], y=client_screen_info["text"]["y"],width=render_width,height=render_height, decoration=client_screen_info["text"]["decoration"], bg=(0,0,0), fg=(255,255,255))
-        console.print_box(x=client_screen_info["text"]["x"]+1, y=client_screen_info["text"]["y"]+2,width=render_width-2,height=render_height-2,string=self.text[0:self.get_current_dialog_index()],alignment=tcod.LEFT, bg=(255,255,255), fg=(0,0,0))
+        console.print_box(x=client_screen_info["text"]["x"]+2, y=client_screen_info["text"]["y"]+2,width=render_width-3,height=render_height-2,string=self.text[0:self.get_current_dialog_index()],alignment=tcod.LEFT, bg=(255,255,255), fg=(0,0,0))
 
     def animation_tick_loop(self):
         if not self.engine.is_section_disabled(self.name):
             self.animation_tick += 1
-        t = Timer(self.animation_tick_interval, self.animation_tick_loop)
-        t.daemon = True
-        t.start()
  
     def get_animation_tick(self):
         return (self.animation_tick)
 
     def dialog_tick_loop(self):
-        if not self.engine.is_section_disabled(self.name) and self.state == ClientSectionState.DIALOG:
-            self.current_dialog_index += self.engine.get_delta_time() * 60
-        t = Timer(self.dialog_tick_interval, self.dialog_tick_loop)
-        t.daemon = True
-        t.start()
+        self.current_pause += self.engine.get_delta_time()
+        self.current_pause = min(self.current_pause, 0)
+        if self.current_pause >= 0:
+            diff =  self.engine.get_delta_time() * 30
+            if len(self.text_effects) >0:
+                if self.text_effects[0]["type"] == TextEffects.PAUSE:  
+                    if self.current_dialog_index + diff >= self.text_effects[0]["index"]:  
+                        self.current_pause -= self.text_effects[0]["length"]   
+                        self.current_dialog_index  = self.text_effects[0]["index"]   
+                        self.text_effects.pop(0)  
+                    else:
+                        self.current_dialog_index += diff  
+            else:
+                self.current_dialog_index += diff  
+
+        self.num_line_breaks = self.text[:self.get_current_dialog_index()].count('\n')
 
     def get_current_dialog_index(self):
         return (int(self.current_dialog_index))
 
+    def analyse_text(self):
+        split_text = self.text.split('#')
+        final_text = ""
+        print(split_text)
+        for t in split_text:
+            if t.startswith("pause="):
+                t = t[len("pause="):]
+                self.text_effects.append({"type":TextEffects.PAUSE,"index":len(final_text), "length":float(t)})
+            else:
+                final_text += t
+
+        self.text = final_text
     
