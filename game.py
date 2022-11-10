@@ -380,13 +380,16 @@ class Game(Engine):
         self.refresh_open_sections()
 
     def present_request_solution(self, request_id, solution_id, client_id):
-        request = requests[request_id]
-        if request["solution"] == solution_id:
-            print("Presenting {0} for request {1} - {2}".format(solution_id, request_id, format_green_background("CORRECT!")))
-            self.complete_request(request_id, client_id)
+        if request_id in self.player.current_requests:
+            request = requests[request_id]
+            if request["solution"] == solution_id:
+                print("Presenting {0} for request {1} - {2}".format(solution_id, request_id, format_green_background("CORRECT!")))
+                self.complete_request(request_id, client_id)
+            else:
+                print("Presenting {0} for request {1} - {2}".format(solution_id, request_id, format_red_background("INCORRECT!")))
+                self.fail_request(request_id, client_id)
         else:
-            print("Presenting {0} for request {1} - {2}".format(solution_id, request_id, format_red_background("INCORRECT!")))
-            self.fail_request(request_id, client_id)
+            print("Presenting {0} for request {1}, but we haven't accepted that request!".format(solution_id, request_id))
         
         self.close_presentation_dialog()
 

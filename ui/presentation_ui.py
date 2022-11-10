@@ -21,7 +21,7 @@ class PresentationUI(UI):
         b.set_mask(button_mask)
         self.add_element(b)
 
-    def setup_sublocation_buttons(self, x, y, y_gap, request_id, client_id, book_ids):
+    def setup_book_buttons(self, x, y, y_gap, request_id, client_id, book_ids):
         count = 0
         for book_id in book_ids:
             book_title = book_manager[book_id].title

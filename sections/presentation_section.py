@@ -19,7 +19,7 @@ class PresentationSection(Section):
         self.refresh()
 
     def refresh(self):
-        self.ui.setup_sublocation_buttons(presentation_dialog_info["books"]["x"],presentation_dialog_info["books"]["y"]-1,presentation_dialog_info["books"]["gap"],self.request_id, self.client_id,self.engine.player.stock.get_book_ids() )
+        self.ui.setup_book_buttons(presentation_dialog_info["books"]["x"],presentation_dialog_info["books"]["y"]-1,presentation_dialog_info["books"]["gap"],self.request_id, self.client_id,self.engine.player.stock.get_book_ids() )
 
     def update(self):
         super().update()

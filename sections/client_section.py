@@ -39,6 +39,9 @@ class ClientSection(Section):
 
         self.animation_tick_interval = 0.3
         self.animation_tick = 0
+
+        # Request
+        self.request = None
         
         # Dialog 
         self.text = ""
@@ -52,9 +55,6 @@ class ClientSection(Section):
         
     def open(self, client_id):
         self.client = client_manager[client_id]
-
-        if len(self.client.available_requests) > 0:
-            self.request = requests[self.client.available_requests[0]]
 
         if not self.client.served_today:
             self.state = ClientSectionState.INTRO_REQUEST_OUTSTANDING
@@ -111,14 +111,15 @@ class ClientSection(Section):
 
     def keydown(self, key):
         if self.state == ClientSectionState.INTRO_REQUEST_OUTSTANDING and key == tcod.event.K_SPACE and not self.client.served_today:
-            self.start_character_talking(self.request["text"], ClientSectionState.PRESENTATION)
-            self.engine.start_request(self.request["id"])
+            if self.start_request():
+                self.start_character_talking(self.request["text"], ClientSectionState.PRESENTATION)
         elif self.state == ClientSectionState.DIALOG and key == tcod.event.K_SPACE:
             self.current_dialog_index = len(self.text)
         elif key == tcod.event.K_q and not self.client.served_today:
             self.start_character_talking(self.request["text"], ClientSectionState.PRESENTATION)
         elif key == tcod.event.K_e and not self.client.served_today:
-            self.engine.open_presentation_dialog(self.request["id"], self.client.id)
+            if self.request != None:
+                self.engine.open_presentation_dialog(self.request["id"], self.client.id)
 
     def change_state(self, new_state):
         self.state = new_state
@@ -129,6 +130,13 @@ class ClientSection(Section):
             
         elif new_state == ClientSectionState.PRESENTATION:
             self.character_currently_talking = False
+
+    def start_request(self):
+        if len(self.client.available_requests) > 0:
+            self.request = requests[self.client.available_requests[0]]
+            self.engine.start_request(self.request["id"])
+            return True
+        return False
 
     def request_satisfied(self):
         self.start_character_talking("This is the correct book!", ClientSectionState.IDLE)
@@ -209,7 +217,6 @@ class ClientSection(Section):
     def analyse_text(self):
         split_text = self.text.split('#')
         final_text = ""
-        print(split_text)
         for t in split_text:
             if t.startswith("pause="):
                 t = t[len("pause="):]
