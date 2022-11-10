@@ -16,6 +16,7 @@ class ShopUI(UI):
         for id in book_ids:
             book = book_manager[id]
             t = Tooltip(x,y + ( y_gap * count), len("x: " + book.title), 1, book.desc)
+            t.offset(x=1,y=1)
             self.add_element(t)
             count += 1
 

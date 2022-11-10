@@ -338,10 +338,13 @@ class Tooltip(UIElement):
 
         self.render_order = 5
 
+        self.offset_x = 0
+        self.offset_y = 0
+
     def on_mouseenter(self, x: int = 0, y:int = 0):
         self.visible = True
-        self.render_x = x
-        self.render_y = y
+        self.render_x = x + self.offset_x
+        self.render_y = y + self.offset_y
         
     def on_mouseleave(self):
         self.visible = False
@@ -361,6 +364,10 @@ class Tooltip(UIElement):
         if self.visible == True:
             console.draw_frame(x=self.render_x,y=self.render_y,width=self.render_width,height=self.render_height, decoration="╔═╗║ ║╚═╝", bg=(0,0,0), fg=(255,255,255))
             console.print_box(x=self.render_x+1,y=self.render_y+1,width=self.render_width-2,height=self.render_height-2,string=self.text,alignment=tcod.CENTER, bg=(0,0,0), fg=(255,255,255))
+
+    def offset(self, x:int = 0,y:int = 0):
+        self.offset_x = x
+        self.offset_y = y
 
 class Toggle(Button):
     def __init__(self, x: int, y: int, width: int, height: int, is_on: bool, on_action: Action, off_action: Action, tiles, on_tiles, off_tiles, response_x:int, response_y:int, normal_bg = (255,255,255), highlight_bg = (128,128,128)):
