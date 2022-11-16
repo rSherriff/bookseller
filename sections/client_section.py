@@ -92,8 +92,7 @@ class ClientSection(Section):
             self.draw_speech_mark(console)  
 
             if self.current_dialog_index > len(self.text):
-                self.character_currently_talking = False
-                self.change_state(self.state_after_dialog)
+                self.end_talking()
             self.current_dialog_index = min(len(self.text), self.current_dialog_index)
 
             self.draw_dialog(console)
@@ -114,7 +113,8 @@ class ClientSection(Section):
             if self.start_request():
                 self.start_character_talking(self.request["text"], ClientSectionState.PRESENTATION)
         elif self.state == ClientSectionState.DIALOG and key == tcod.event.K_SPACE:
-            self.current_dialog_index = len(self.text)
+            self.current_dialog_index = len(self.text) + (self.text.count('\n') * client_screen_info["text"]["max_width"])
+            self.end_talking()
         elif key == tcod.event.K_q and not self.client.served_today:
             self.start_character_talking(self.request["text"], ClientSectionState.PRESENTATION)
         elif key == tcod.event.K_e and not self.client.served_today:
@@ -153,6 +153,10 @@ class ClientSection(Section):
     def reset_talking(self, text):
         self.current_dialog_index = 1
         self.text = text
+
+    def end_talking(self):
+        self.character_currently_talking = False
+        self.change_state(self.state_after_dialog)
 
     def draw_character(self, console, state):
         character_console = tcod.Console(width=client_character_info["width"], height=client_character_info["height"], order="F")
