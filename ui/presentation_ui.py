@@ -27,7 +27,7 @@ class PresentationUI(UI):
             book_title = book_manager[book_id].title
             bd = [x, y + ( y_gap * count),len(book_title)+2, presentation_dialog_info["button_height"]]  # Button Dimensions
             b = Button(x=bd[0], y=bd[1], width=bd[2], height=bd[3], click_action=OpenConfirmationDialog(
-            self.section.engine, "Present {0}?".format(book_title), PresentRequestSolutionAction(self.section.engine, request_id, book_id, client_id), self.section.name, enable_ui_on_confirm=False),h_fg=presentation_dialog_info["b_h_color"])
+            self.section.engine, "Present {0}?".format(book_title), PresentRequestSolutionAction(self.section.engine, request_id, book_id, client_id), self.section.name, enable_ui_on_confirm=True),h_fg=presentation_dialog_info["b_h_color"])
             tl = [True]
             fl = [False]
             button_mask = [fl*bd[2], fl + (tl * (bd[2] - 2)) + fl,fl*bd[2]]

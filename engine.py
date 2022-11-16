@@ -52,6 +52,8 @@ class Engine(abc.ABC):
         self.event_handler: EventHandler = MainGameEventHandler(self)
         self.mouse_location = (0, 0)
 
+        self.sections_disabled_by_dialog = {}
+
         self.setup_effects()
         self.setup_sections()
 
@@ -269,12 +271,13 @@ class Engine(abc.ABC):
     def open_confirmation_dialog(self, text, confirmation_action, section, enable_ui_on_confirm):
         self.misc_sections[CONFIRMATION_DIALOG].setup(text, confirmation_action, section, enable_ui_on_confirm)
         self.enable_section(CONFIRMATION_DIALOG)
-        self.sections_disabled_by_dialog = self.disable_all_ui_sections([CONFIRMATION_DIALOG])
+        self.sections_disabled_by_dialog[CONFIRMATION_DIALOG] = self.disable_all_ui_sections([CONFIRMATION_DIALOG])
 
     def close_confirmation_dialog(self, section, enable_ui):
+        print("WHA?")
         self.disable_section(CONFIRMATION_DIALOG)
 
-        self.enable_ui_sections(self.sections_disabled_by_dialog)
+        self.enable_ui_sections(self.sections_disabled_by_dialog[CONFIRMATION_DIALOG])
         if not enable_ui:
             self.disable_ui_section(section)
 
@@ -284,11 +287,11 @@ class Engine(abc.ABC):
     def open_notification_dialog(self, text, section):
         self.misc_sections[NOTIFICATION_DIALOG].setup(text, section)
         self.enable_section(NOTIFICATION_DIALOG)
-        self.sections_disabled_by_dialog = self.disable_all_ui_sections([NOTIFICATION_DIALOG])
+        self.sections_disabled_by_dialog[NOTIFICATION_DIALOG] = self.disable_all_ui_sections([NOTIFICATION_DIALOG])
 
     def close_notification_dialog(self, section):
         self.disable_section(NOTIFICATION_DIALOG)
-        self.enable_ui_sections(self.sections_disabled_by_dialog)
+        self.enable_ui_sections(self.sections_disabled_by_dialog[NOTIFICATION_DIALOG])
 
     def is_ui_paused(self):
         return self.full_screen_effect.in_effect

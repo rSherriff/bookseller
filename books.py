@@ -28,6 +28,10 @@ class Stock:
             print("Failed to remove {0} - {1} from {2}'s stock".format(book.id, book.title, self.name))
             return False
 
+    def clear(self):
+        while len(self.stock.items()) > 0:
+            self.remove_book(self.stock[next(iter(self.stock))])
+
     def get_book_ids(self):
         return self.stock.keys()
 

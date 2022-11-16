@@ -356,7 +356,7 @@ class Game(Engine):
     #TEMP - Need to add a bespoke dialog for story segments
     def close_notification_dialog(self, section):
         self.disable_section(NOTIFICATION_DIALOG)
-        self.enable_ui_sections(self.sections_disabled_by_dialog)
+        self.enable_ui_sections(self.sections_disabled_by_dialog[NOTIFICATION_DIALOG])
         self.try_advance_story_segment()
         self.refresh_open_sections()
 
@@ -373,6 +373,12 @@ class Game(Engine):
             print("Starting request {0}".format(request_to_start))
             self.player.current_requests.append(request_to_start)
 
+            request_books = requests[request_to_start]["books"]
+            print(request_books)
+            for shop, books in request_books.items():
+                for book in books:
+                    shop_manager[shop].stock.add_book(book_manager[book])
+
     def complete_request(self, request_id, client_id):
         print("Completed request {0}".format(request_id))
         client_manager[client_id].complete_request(request_id)
@@ -381,6 +387,8 @@ class Game(Engine):
         self.try_advance_story_segment()
         self.game_sections[CLIENT_SECTION].request_satisfied()
         self.refresh_open_sections()
+        for shop in shop_manager.values():
+            shop.stock.clear()
 
     def fail_request(self, request_id, client_id):
         self.game_sections[CLIENT_SECTION].request_failed()
@@ -403,11 +411,12 @@ class Game(Engine):
     def open_presentation_dialog(self, request_id, client_id):
         self.game_sections[PRESENTATION_SECTION].open(request_id, client_id)
         self.enable_section(PRESENTATION_SECTION)
-        self.sections_disabled_by_dialog = self.disable_all_ui_sections([PRESENTATION_SECTION])
+        self.sections_disabled_by_dialog[PRESENTATION_SECTION] = self.disable_all_ui_sections([PRESENTATION_SECTION])
 
     def close_presentation_dialog(self):
         self.disable_section(PRESENTATION_SECTION)
-        self.enable_ui_sections(self.sections_disabled_by_dialog)
+        print(self.sections_disabled_by_dialog)
+        self.enable_ui_sections(self.sections_disabled_by_dialog[PRESENTATION_SECTION])
 
 
 

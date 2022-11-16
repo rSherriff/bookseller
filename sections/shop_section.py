@@ -34,7 +34,11 @@ class ShopSection(Section):
 
         console.print_box(shop_screen_info["title"]["x"],shop_screen_info["title"]["y"],shop_screen_info["title"]["width"],shop_screen_info["title"]["height"], string=self.shop.name, fg=(255,255,255), alignment=tcod.CENTER)
 
-        info_text = "The following books catch your eye:"
+        if len(self.shop.stock.values()) > 0:
+            info_text = "The following books catch your eye:"
+        else:
+            info_text = "No books here catch your eye."
+            
         console.print_box(shop_screen_info["shop_info"]["x"],shop_screen_info["shop_info"]["y"],len(info_text), height=1, string=info_text, fg=(255,255,255), alignment=tcod.CENTER)
 
         count = 0
