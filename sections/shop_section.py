@@ -39,7 +39,8 @@ class ShopSection(Section):
 
         count = 0
         for book in self.shop.stock.values():
-            console.print(shop_screen_info["books"]["x"],shop_screen_info["books"]["y"]+ (count * shop_screen_info["books"]["gap"]),book.title, fg=(255,255,255))
+            title = book.title + " " + ("." * (shop_screen_info["books"]["button_delta"] - len(book.title) - 1))
+            console.print(shop_screen_info["books"]["x"],shop_screen_info["books"]["y"]+ (count * shop_screen_info["books"]["gap"]),title, fg=(255,255,255))
 
             console.draw_frame(self.button_x()-1,shop_screen_info["books"]["y"]+ (count * shop_screen_info["books"]["gap"])-1,width=shop_screen_info["button_width"],height=shop_screen_info["button_height"], decoration=shop_screen_info["button_decoration"], bg=shop_screen_info["b_bg_color"], fg=shop_screen_info["b_fg_color"])
             console.print_box(self.button_x(),shop_screen_info["books"]["y"]+ (count * shop_screen_info["books"]["gap"]),width=shop_screen_info["button_width"]-2,height=shop_screen_info["button_height"]-2,string="Buy",alignment=tcod.CENTER, bg=shop_screen_info["b_font_bg_color"], fg=shop_screen_info["b_font_fg_color"])

@@ -39,7 +39,8 @@ class LocationSection(Section):
         count = 0
         for location in self.location.sublocations.values():
             if not location.hidden:
-                console.print(location_screen_info["locations"]["x"],location_screen_info["locations"]["y"]+ (count * location_screen_info["locations"]["gap"]),"{0}".format(location.name), fg=(255,255,255))
+                location_name = location.name + " " + ("." * (location_screen_info["locations"]["button_delta"] - len(location.name) - 1))
+                console.print(location_screen_info["locations"]["x"],location_screen_info["locations"]["y"]+ (count * location_screen_info["locations"]["gap"]),location_name, fg=(255,255,255))
 
                 button_x = location_screen_info["locations"]["x"] + location_screen_info["locations"]["button_delta"] - 1
                 console.draw_frame(button_x,location_screen_info["locations"]["y"]+ (count * location_screen_info["locations"]["gap"])-1,width=location_screen_info["button_width"],height=location_screen_info["button_height"], decoration=location_screen_info["button_decoration"], bg=location_screen_info["b_bg_color"], fg=location_screen_info["b_fg_color"])
