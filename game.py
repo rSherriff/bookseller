@@ -415,7 +415,6 @@ class Game(Engine):
 
     def close_presentation_dialog(self):
         self.disable_section(PRESENTATION_SECTION)
-        print(self.sections_disabled_by_dialog)
         self.enable_ui_sections(self.sections_disabled_by_dialog[PRESENTATION_SECTION])
 
 

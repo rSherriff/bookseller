@@ -75,7 +75,7 @@ class ClientSection(Section):
 
         if self.state == ClientSectionState.IDLE:
             self.draw_character(console, "talk_one")
-            self.draw_text(console)
+            self.draw_dialog(console)
         elif self.state == ClientSectionState.INTRO_REQUEST_OUTSTANDING:
             self.draw_character(console, "talk_one")
             console.print_box(20,6,25,5, string="Press 'spacebar' to hear the client's order", alignment=tcod.CENTER, fg = (255,255,255))
@@ -113,7 +113,6 @@ class ClientSection(Section):
             if self.start_request():
                 self.start_character_talking(self.request["text"], ClientSectionState.PRESENTATION)
         elif self.state == ClientSectionState.DIALOG and key == tcod.event.K_SPACE:
-            self.current_dialog_index = len(self.text) + (self.text.count('\n') * client_screen_info["text"]["max_width"])
             self.end_talking()
         elif key == tcod.event.K_q and not self.client.served_today:
             self.start_character_talking(self.request["text"], ClientSectionState.PRESENTATION)
@@ -155,6 +154,7 @@ class ClientSection(Section):
         self.text = text
 
     def end_talking(self):
+        self.current_dialog_index = len(self.text)
         self.character_currently_talking = False
         self.change_state(self.state_after_dialog)
 
@@ -183,7 +183,7 @@ class ClientSection(Section):
 
     def draw_dialog(self, console):
         render_width =  client_screen_info["text"]["max_width"]
-        render_height = ceil((self.get_current_dialog_index() + (render_width * self.num_line_breaks)) / render_width)
+        render_height = console.get_height_rect(client_screen_info["text"]["x"], client_screen_info["text"]["y"], render_width, 1000, self.text[0:self.get_current_dialog_index()])
         render_width += 4
         render_height += 4
 
@@ -212,8 +212,6 @@ class ClientSection(Section):
                         self.current_dialog_index += diff  
             else:
                 self.current_dialog_index += diff  
-
-        self.num_line_breaks = self.text[:self.get_current_dialog_index()].count('\n')
 
     def get_current_dialog_index(self):
         return (int(self.current_dialog_index))

@@ -274,7 +274,6 @@ class Engine(abc.ABC):
         self.sections_disabled_by_dialog[CONFIRMATION_DIALOG] = self.disable_all_ui_sections([CONFIRMATION_DIALOG])
 
     def close_confirmation_dialog(self, section, enable_ui):
-        print("WHA?")
         self.disable_section(CONFIRMATION_DIALOG)
 
         self.enable_ui_sections(self.sections_disabled_by_dialog[CONFIRMATION_DIALOG])
